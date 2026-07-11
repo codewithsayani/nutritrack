@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NutriTrack Settings — Customize your experience.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Settings — NutriTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script>
+    const t = localStorage.getItem('nt_theme');
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+</head>
+<body>
+  <div id="toast-container" role="alert" aria-live="polite"></div>
+
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="App navigation">
+      <div class="sidebar-top">
+        <a href="index.html" class="sidebar-logo">
+          <div class="logo-icon" aria-hidden="true">🥗</div>
+          <span class="logo-label">Nutri<span>Track</span></span>
+        </a>
+        <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Toggle sidebar">◀</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <a href="dashboard.html" class="nav-item" data-tooltip="Dashboard"><span class="nav-item-icon" aria-hidden="true">📊</span><span class="nav-item-label">Dashboard</span></a>
+        <a href="meals.html"     class="nav-item" data-tooltip="Meals"><span class="nav-item-icon" aria-hidden="true">🍽️</span><span class="nav-item-label">Meals</span></a>
+        <a href="water.html"     class="nav-item" data-tooltip="Water"><span class="nav-item-icon" aria-hidden="true">💧</span><span class="nav-item-label">Water</span></a>
+        <a href="weight.html"    class="nav-item" data-tooltip="Weight"><span class="nav-item-icon" aria-hidden="true">⚖️</span><span class="nav-item-label">Weight</span></a>
+        <div class="nav-section-label">Account</div>
+        <a href="profile.html"  class="nav-item" data-tooltip="Profile"><span class="nav-item-icon" aria-hidden="true">👤</span><span class="nav-item-label">Profile</span></a>
+        <a href="settings.html" class="nav-item" data-tooltip="Settings"><span class="nav-item-icon" aria-hidden="true">⚙️</span><span class="nav-item-label">Settings</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <a href="profile.html" class="sidebar-profile">
+          <div class="sidebar-avatar" data-profile-avatar>U</div>
+          <div class="sidebar-profile-info">
+            <div class="sidebar-profile-name" data-profile-name>Loading...</div>
+            <div class="sidebar-profile-role">Premium Member</div>
+          </div>
+        </a>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay" aria-hidden="true"></div>
+
+    <main class="main-content" id="main-content">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <button class="navbar-icon-btn" id="mobile-menu-toggle" aria-label="Open menu" style="display:none">☰</button>
+          <div>
+            <div class="page-title">Settings</div>
+            <div class="page-subtitle">Customize your NutriTrack experience</div>
+          </div>
+        </div>
+        <div class="navbar-right">
+          <a href="profile.html" class="navbar-avatar" data-profile-avatar aria-label="View profile">U</a>
+        </div>
+      </header>
+
+      <div class="page-content" style="max-width:720px">
+
+        <!-- Appearance -->
+        <div class="settings-card" role="region" aria-labelledby="appearance-title">
+          <h2 class="settings-card-title" id="appearance-title">
+            <div class="settings-icon" style="background:rgba(79,70,229,0.1)">🎨</div>
+            Appearance
+          </h2>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label">Dark Mode</div>
+              <div class="settings-item-desc">Switch to a dark color scheme for reduced eye strain</div>
+            </div>
+            <label class="toggle-switch" aria-label="Toggle dark mode">
+              <input type="checkbox" id="dark-mode-toggle">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="settings-card" role="region" aria-labelledby="notifications-title">
+          <h2 class="settings-card-title" id="notifications-title">
+            <div class="settings-icon" style="background:rgba(245,158,11,0.1)">🔔</div>
+            Notifications
+          </h2>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label">Meal Reminders</div>
+              <div class="settings-item-desc">Get reminded to log your meals throughout the day</div>
+            </div>
+            <label class="toggle-switch" aria-label="Toggle meal reminders">
+              <input type="checkbox" id="meal-reminders">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label">Water Reminders</div>
+              <div class="settings-item-desc">Hourly reminders to stay hydrated</div>
+            </div>
+            <label class="toggle-switch" aria-label="Toggle water reminders">
+              <input type="checkbox" id="water-reminders">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label">Weekly Report</div>
+              <div class="settings-item-desc">Receive a weekly summary of your nutrition progress</div>
+            </div>
+            <label class="toggle-switch" aria-label="Toggle weekly report">
+              <input type="checkbox" id="weekly-report">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label">Goal Alerts</div>
+              <div class="settings-item-desc">Get notified when you reach or exceed your daily goals</div>
+            </div>
+            <label class="toggle-switch" aria-label="Toggle goal alerts">
+              <input type="checkbox" id="goal-alerts">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Account -->
+        <div class="settings-card" role="region" aria-labelledby="account-title">
+          <h2 class="settings-card-title" id="account-title">
+            <div class="settings-icon" style="background:rgba(34,197,94,0.1)">👤</div>
+            Account
+          </h2>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label">Edit Profile</div>
+              <div class="settings-item-desc">Update your personal info, body metrics, and goals</div>
+            </div>
+            <a href="profile.html" class="btn btn-secondary btn-sm">Edit →</a>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label">Sign Out</div>
+              <div class="settings-item-desc">Log out of your NutriTrack account</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" data-logout>Sign Out</button>
+          </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="settings-card danger-zone" role="region" aria-labelledby="danger-title">
+          <h2 class="settings-card-title" id="danger-title">
+            <div class="settings-icon" style="background:rgba(239,68,68,0.1)">⚠️</div>
+            Danger Zone
+          </h2>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label">Reset Meal Data</div>
+              <div class="settings-item-desc">Permanently delete all your meal entries</div>
+            </div>
+            <button class="btn btn-danger btn-sm" id="reset-meals-btn">Reset Meals</button>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label">Reset Water Logs</div>
+              <div class="settings-item-desc">Permanently delete all water intake logs</div>
+            </div>
+            <button class="btn btn-danger btn-sm" id="reset-water-btn">Reset Water</button>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label">Reset Weight Logs</div>
+              <div class="settings-item-desc">Permanently delete all weight entries</div>
+            </div>
+            <button class="btn btn-danger btn-sm" id="reset-weight-btn">Reset Weight</button>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label" style="color:var(--danger)">Delete All Data</div>
+              <div class="settings-item-desc">Permanently delete ALL your tracking data. This cannot be undone.</div>
+            </div>
+            <button class="btn btn-danger btn-sm" id="reset-all-btn">Delete Everything</button>
+          </div>
+        </div>
+
+        <!-- App Info -->
+        <div class="settings-card">
+          <h2 class="settings-card-title">
+            <div class="settings-icon" style="background:rgba(79,70,229,0.1)">ℹ️</div>
+            About NutriTrack
+          </h2>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label">Version</div>
+              <div class="settings-item-desc">NutriTrack v1.0.0</div>
+            </div>
+            <span class="badge badge-accent">Latest</span>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label">Backend</div>
+              <div class="settings-item-desc">Powered by Supabase</div>
+            </div>
+            <span class="badge badge-primary">PostgreSQL</span>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label">Deployment</div>
+              <div class="settings-item-desc">Hosted on Vercel</div>
+            </div>
+            <span class="badge badge-muted">Edge Network</span>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="bottom-nav" role="navigation" aria-label="Mobile navigation">
+    <div class="bottom-nav-items">
+      <a href="dashboard.html" class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">📊</span><span>Home</span></a>
+      <a href="meals.html"     class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">🍽️</span><span>Meals</span></a>
+      <a href="water.html"     class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">💧</span><span>Water</span></a>
+      <a href="weight.html"    class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">⚖️</span><span>Weight</span></a>
+      <a href="profile.html"   class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">👤</span><span>Profile</span></a>
+    </div>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module">
+    import { initSettings } from './js/settings.js';
+    if (window.innerWidth <= 1024) {
+      document.getElementById('mobile-menu-toggle').style.display = 'flex';
+    }
+    initSettings();
+  </script>
+</body>
+</html>

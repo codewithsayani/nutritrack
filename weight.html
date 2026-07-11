@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NutriTrack Weight Tracker — Monitor your weight and BMI.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Weight Tracker — NutriTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script>
+    const t = localStorage.getItem('nt_theme');
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+</head>
+<body>
+  <div id="toast-container" role="alert" aria-live="polite"></div>
+
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="App navigation">
+      <div class="sidebar-top">
+        <a href="index.html" class="sidebar-logo">
+          <div class="logo-icon" aria-hidden="true">🥗</div>
+          <span class="logo-label">Nutri<span>Track</span></span>
+        </a>
+        <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Toggle sidebar">◀</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <a href="dashboard.html" class="nav-item" data-tooltip="Dashboard"><span class="nav-item-icon" aria-hidden="true">📊</span><span class="nav-item-label">Dashboard</span></a>
+        <a href="meals.html"     class="nav-item" data-tooltip="Meals"><span class="nav-item-icon" aria-hidden="true">🍽️</span><span class="nav-item-label">Meals</span></a>
+        <a href="water.html"     class="nav-item" data-tooltip="Water"><span class="nav-item-icon" aria-hidden="true">💧</span><span class="nav-item-label">Water</span></a>
+        <a href="weight.html"    class="nav-item" data-tooltip="Weight"><span class="nav-item-icon" aria-hidden="true">⚖️</span><span class="nav-item-label">Weight</span></a>
+        <div class="nav-section-label">Account</div>
+        <a href="profile.html"  class="nav-item" data-tooltip="Profile"><span class="nav-item-icon" aria-hidden="true">👤</span><span class="nav-item-label">Profile</span></a>
+        <a href="settings.html" class="nav-item" data-tooltip="Settings"><span class="nav-item-icon" aria-hidden="true">⚙️</span><span class="nav-item-label">Settings</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <a href="profile.html" class="sidebar-profile">
+          <div class="sidebar-avatar" data-profile-avatar>U</div>
+          <div class="sidebar-profile-info">
+            <div class="sidebar-profile-name" data-profile-name>Loading...</div>
+            <div class="sidebar-profile-role">Premium Member</div>
+          </div>
+        </a>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay" aria-hidden="true"></div>
+
+    <main class="main-content" id="main-content">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <button class="navbar-icon-btn" id="mobile-menu-toggle" aria-label="Open menu" style="display:none">☰</button>
+          <div>
+            <div class="page-title">Weight Tracker</div>
+            <div class="page-subtitle">Monitor your weight & BMI progress</div>
+          </div>
+        </div>
+        <div class="navbar-right">
+          <a href="profile.html" class="navbar-avatar" data-profile-avatar aria-label="View profile">U</a>
+        </div>
+      </header>
+
+      <div class="page-content">
+
+        <!-- Stats Row -->
+        <div class="stats-grid" style="margin-bottom:var(--space-5)">
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-label">Current Weight</div>
+                <div class="stat-value" id="stat-current-weight" style="font-size:var(--fs-3xl)">–</div>
+              </div>
+              <div class="stat-icon primary" aria-hidden="true">⚖️</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-label">vs. Goal</div>
+                <div class="stat-value" id="stat-goal-diff" style="font-size:var(--fs-xl)">–</div>
+              </div>
+              <div class="stat-icon accent" aria-hidden="true">🎯</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-label">Highest Logged</div>
+                <div class="stat-value" id="stat-highest-weight" style="font-size:var(--fs-xl)">–</div>
+              </div>
+              <div class="stat-icon danger" aria-hidden="true">📈</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-label">Lowest Logged</div>
+                <div class="stat-value" id="stat-lowest-weight" style="font-size:var(--fs-xl)">–</div>
+              </div>
+              <div class="stat-icon accent" aria-hidden="true">📉</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid" style="grid-template-columns:1fr 1fr">
+
+          <!-- Add Weight Form -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h2 class="chart-title">⚖️ Log Weight</h2>
+            </div>
+            <form id="add-weight-form" novalidate style="display:flex;flex-direction:column;gap:var(--space-4)">
+              <div class="form-group">
+                <label class="form-label" for="weight-val">Weight (kg) *</label>
+                <input type="number" id="weight-val" name="weight" class="form-input"
+                  placeholder="e.g. 72.5" step="0.1" min="10" max="500" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="weight-date-input">Date *</label>
+                <input type="date" id="weight-date-input" name="weight_date" class="form-input" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="weight-notes">Notes (optional)</label>
+                <input type="text" id="weight-notes" name="notes" class="form-input" placeholder="e.g. After workout">
+              </div>
+              <button type="submit" class="btn btn-primary" id="add-weight-btn">➕ Log Weight</button>
+            </form>
+          </div>
+
+          <!-- BMI Card -->
+          <div class="bmi-card" style="display:flex;flex-direction:column;justify-content:center">
+            <h2 style="font-size:var(--fs-lg);font-weight:700;margin-bottom:var(--space-4)">🧮 BMI Calculator</h2>
+            <div style="font-size:var(--fs-xs);color:var(--text-muted);margin-bottom:var(--space-2)">YOUR BMI</div>
+            <div class="bmi-value" id="bmi-value">–</div>
+            <div class="bmi-category" id="bmi-category" style="margin-bottom:var(--space-4)">–</div>
+            <div class="bmi-scale" aria-label="BMI scale indicator">
+              <div class="bmi-indicator" id="bmi-indicator" style="left:0%"></div>
+            </div>
+            <div class="bmi-labels" aria-hidden="true">
+              <span>Under</span>
+              <span>Normal</span>
+              <span>Over</span>
+              <span>Obese</span>
+            </div>
+            <p class="bmi-description" id="bmi-description" style="font-size:var(--fs-xs);color:var(--text-muted);margin-top:var(--space-4);line-height:1.6">
+              Log your weight to see your BMI. Update your height in Profile settings.
+            </p>
+          </div>
+
+          <!-- Weight Chart -->
+          <div class="chart-card" style="grid-column:1/-1">
+            <div class="chart-card-header">
+              <h2 class="chart-title">📈 Weight Progress</h2>
+            </div>
+            <div class="chart-container" style="height:260px">
+              <canvas id="weight-chart" aria-label="Weight progress chart" role="img"></canvas>
+            </div>
+          </div>
+
+          <!-- History Table -->
+          <div class="data-table-wrapper" style="grid-column:1/-1">
+            <table class="data-table" aria-label="Weight history">
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Weight</th>
+                  <th scope="col">Change</th>
+                  <th scope="col">BMI</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="weight-tbody">
+                <tr><td colspan="5"><div class="skeleton skeleton-card" style="height:48px"></div></td></tr>
+                <tr><td colspan="5"><div class="skeleton skeleton-card" style="height:48px"></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="bottom-nav" role="navigation" aria-label="Mobile navigation">
+    <div class="bottom-nav-items">
+      <a href="dashboard.html" class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">📊</span><span>Home</span></a>
+      <a href="meals.html"     class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">🍽️</span><span>Meals</span></a>
+      <a href="water.html"     class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">💧</span><span>Water</span></a>
+      <a href="weight.html"    class="bottom-nav-item active"><span class="bottom-nav-icon" aria-hidden="true">⚖️</span><span>Weight</span></a>
+      <a href="profile.html"   class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">👤</span><span>Profile</span></a>
+    </div>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module">
+    import { initWeight } from './js/weight.js';
+    if (window.innerWidth <= 1024) {
+      document.getElementById('mobile-menu-toggle').style.display = 'flex';
+    }
+    initWeight();
+  </script>
+</body>
+</html>

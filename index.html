@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NutriTrack — The premium AI-powered calorie & nutrition tracker. Log meals, track macros, monitor weight, and hit your health goals.">
+  <meta name="keywords" content="calorie tracker, nutrition tracker, meal log, macro tracker, weight loss, fitness app">
+  <meta property="og:title" content="NutriTrack — Premium Calorie Tracker">
+  <meta property="og:description" content="Track calories, macros, water intake, and weight with a beautiful, intuitive interface.">
+  <meta property="og:type" content="website">
+  <title>NutriTrack — Premium Calorie & Nutrition Tracker</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Theme init (no FOUC) -->
+  <script>
+    const t = localStorage.getItem('nt_theme');
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+</head>
+<body>
+  <!-- Toast Container -->
+  <div id="toast-container" role="alert" aria-live="polite"></div>
+
+  <!-- ── NAVBAR ───────────────────────────────────────────── -->
+  <nav class="landing-nav" role="navigation" aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="NutriTrack home">
+        <div class="logo-icon" aria-hidden="true">🥗</div>
+        <span class="logo-text">Nutri<span>Track</span></span>
+      </a>
+
+      <div class="nav-links" role="menubar">
+        <a href="#features" role="menuitem">Features</a>
+        <a href="#how-it-works" role="menuitem">How It Works</a>
+        <a href="#testimonials" role="menuitem">Testimonials</a>
+        <a href="#faq" role="menuitem">FAQ</a>
+      </div>
+
+      <div class="nav-actions">
+        <a href="login.html"  class="btn btn-secondary btn-sm" id="nav-login">Log In</a>
+        <a href="signup.html" class="btn btn-primary btn-sm"   id="nav-signup">Start Free</a>
+        <a href="dashboard.html" class="btn btn-accent btn-sm" id="nav-dashboard" style="display:none">Dashboard →</a>
+      </div>
+
+      <button class="nav-mobile-toggle" id="mobile-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="nav-mobile-menu" id="mobile-menu" role="dialog" aria-label="Mobile menu">
+    <a href="#features">Features</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#testimonials">Testimonials</a>
+    <a href="#faq">FAQ</a>
+    <a href="login.html"  class="btn btn-secondary w-full">Log In</a>
+    <a href="signup.html" class="btn btn-primary  w-full">Start Free</a>
+  </div>
+
+  <!-- ── HERO ──────────────────────────────────────────────── -->
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="hero-blob hero-blob-1"></div>
+      <div class="hero-blob hero-blob-2"></div>
+      <div class="hero-blob hero-blob-3"></div>
+    </div>
+    <div class="container">
+      <div class="hero-inner">
+        <!-- Content -->
+        <div class="hero-content">
+          <div class="hero-eyebrow">🚀 Trusted by 50,000+ users worldwide</div>
+          <h1 class="hero-title" id="hero-heading">
+            Your <span class="gradient-text">Nutrition</span><br>
+            Journey Starts<br>
+            Here
+          </h1>
+          <p class="hero-desc">
+            Track calories, macros, and hydration with a stunning, intelligent dashboard. 
+            Achieve your health goals faster with NutriTrack's science-backed approach.
+          </p>
+          <div class="hero-actions">
+            <a href="signup.html" class="btn btn-primary btn-xl">
+              🥗 Start Tracking Free
+            </a>
+            <a href="#how-it-works" class="btn btn-secondary btn-xl">
+              See How It Works
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat-item">
+              <div class="hero-stat-num" data-target="50000" data-suffix="+" id="stat-users">50,000+</div>
+              <div class="hero-stat-label">Active Users</div>
+            </div>
+            <div class="hero-stat-item">
+              <div class="hero-stat-num" data-target="2" data-suffix="M+" id="stat-meals">2M+</div>
+              <div class="hero-stat-label">Meals Logged</div>
+            </div>
+            <div class="hero-stat-item">
+              <div class="hero-stat-num" data-target="95" data-suffix="%" id="stat-success">95%</div>
+              <div class="hero-stat-label">Goal Success Rate</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Mockup -->
+        <div class="hero-visual">
+          <div class="hero-dashboard-mock" role="img" aria-label="NutriTrack dashboard preview">
+            <div class="mock-header">
+              <div class="mock-dots" aria-hidden="true">
+                <div class="mock-dot"></div>
+                <div class="mock-dot"></div>
+                <div class="mock-dot"></div>
+              </div>
+              <div class="mock-title">Today's Dashboard</div>
+            </div>
+            <div class="mock-cards">
+              <div class="mock-card">
+                <div class="mock-card-label">Calories</div>
+                <div class="mock-card-value primary">1,847</div>
+              </div>
+              <div class="mock-card">
+                <div class="mock-card-label">Remaining</div>
+                <div class="mock-card-value accent">153</div>
+              </div>
+              <div class="mock-card">
+                <div class="mock-card-label">Protein</div>
+                <div class="mock-card-value secondary">142g</div>
+              </div>
+              <div class="mock-card">
+                <div class="mock-card-label">Water</div>
+                <div class="mock-card-value warning">1.8L</div>
+              </div>
+            </div>
+            <div class="mock-progress-bar">
+              <div class="mock-progress-fill"></div>
+            </div>
+            <div class="mock-meals-label">Today's Meals</div>
+            <div class="mock-meal-row">
+              <span class="mock-meal-name">🌅 Oatmeal with berries</span>
+              <span class="mock-meal-cal">320 kcal</span>
+            </div>
+            <div class="mock-meal-row">
+              <span class="mock-meal-name">☀️ Grilled chicken salad</span>
+              <span class="mock-meal-cal">485 kcal</span>
+            </div>
+            <div class="mock-meal-row">
+              <span class="mock-meal-name">🍎 Protein shake</span>
+              <span class="mock-meal-cal">210 kcal</span>
+            </div>
+          </div>
+
+          <!-- Floating badges -->
+          <div class="hero-badge-float hero-badge-1" aria-hidden="true">
+            <span class="hero-badge-icon">🔥</span>
+            <div>
+              <div style="font-weight:700;font-size:var(--fs-sm)">Goal Reached!</div>
+              <div style="color:var(--text-muted);font-size:10px">You've hit your target</div>
+            </div>
+          </div>
+          <div class="hero-badge-float hero-badge-2" aria-hidden="true">
+            <span class="hero-badge-icon">💧</span>
+            <div>
+              <div style="font-weight:700;font-size:var(--fs-sm)">Stay Hydrated</div>
+              <div style="color:var(--text-muted);font-size:10px">2.5L / day goal</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ──────────────────────────────────────────── -->
+  <section class="features-section" id="features" aria-labelledby="features-heading">
+    <div class="container">
+      <div class="text-center">
+        <p class="section-eyebrow" aria-hidden="true">✨ Features</p>
+        <h2 class="section-title" id="features-heading">Everything You Need to Succeed</h2>
+        <p class="section-subtitle">
+          A complete nutrition tracking ecosystem built for real results.
+        </p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon icon-purple" aria-hidden="true">🍽️</div>
+          <h3 class="feature-title">Smart Meal Tracking</h3>
+          <p class="feature-desc">Log breakfast, lunch, dinner, and snacks with full macro breakdowns. Search from thousands of foods or create custom entries.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-blue" aria-hidden="true">📊</div>
+          <h3 class="feature-title">Detailed Analytics</h3>
+          <p class="feature-desc">Beautiful weekly and monthly charts to visualize your calorie trends. See patterns, identify habits, and optimize your diet.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-green" aria-hidden="true">💧</div>
+          <h3 class="feature-title">Water Intake Tracker</h3>
+          <p class="feature-desc">Never forget to hydrate. Track your daily water intake with a stunning circular progress ring and quick-add buttons.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-orange" aria-hidden="true">⚖️</div>
+          <h3 class="feature-title">Weight & BMI Monitoring</h3>
+          <p class="feature-desc">Log your weight daily and watch your progress over time. Automatic BMI calculation with health category insights.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-red" aria-hidden="true">🎯</div>
+          <h3 class="feature-title">Personalized Goals</h3>
+          <p class="feature-desc">Set custom calorie targets, macro ratios, and weight goals. NutriTrack adapts to your activity level and body metrics.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-teal" aria-hidden="true">🔒</div>
+          <h3 class="feature-title">Secure & Private</h3>
+          <p class="feature-desc">Your data is encrypted and protected with enterprise-grade security. Row-Level Security ensures only you access your data.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ──────────────────────────────────────── -->
+  <section id="how-it-works" aria-labelledby="how-heading">
+    <div class="container text-center">
+      <p class="section-eyebrow" aria-hidden="true">🗺️ Process</p>
+      <h2 class="section-title" id="how-heading">Up and Running in 3 Steps</h2>
+      <p class="section-subtitle">
+        No complicated setup. Just sign up, set your goals, and start tracking.
+      </p>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="step-number" aria-label="Step 1">1</div>
+          <h3 class="step-title">Create Your Profile</h3>
+          <p class="step-desc">Sign up in seconds. Enter your height, weight, age, and fitness goal to get personalized calorie targets.</p>
+        </div>
+        <div class="how-step">
+          <div class="step-number" aria-label="Step 2">2</div>
+          <h3 class="step-title">Log Your Meals</h3>
+          <p class="step-desc">Add meals with a few taps. Track calories, protein, carbs, fat, and serving sizes for complete nutrition awareness.</p>
+        </div>
+        <div class="how-step">
+          <div class="step-number" aria-label="Step 3">3</div>
+          <h3 class="step-title">Achieve Your Goal</h3>
+          <p class="step-desc">Watch your progress on stunning charts. Stay accountable, hit milestones, and transform your health for good.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIALS ──────────────────────────────────────── -->
+  <section class="testimonials-section" id="testimonials" aria-labelledby="testimonials-heading">
+    <div class="container text-center">
+      <p class="section-eyebrow" aria-hidden="true">❤️ Testimonials</p>
+      <h2 class="section-title" id="testimonials-heading">Loved by Thousands</h2>
+      <p class="section-subtitle">See what real users are saying about NutriTrack.</p>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-stars" aria-label="5 stars">⭐⭐⭐⭐⭐</div>
+          <div class="testimonial-quote" aria-hidden="true">"</div>
+          <p class="testimonial-text">NutriTrack completely changed how I think about food. I lost 12kg in 4 months just by being more aware of what I eat. The interface is gorgeous!</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" aria-hidden="true">SM</div>
+            <div>
+              <div class="testimonial-name">Sarah Mitchell</div>
+              <div class="testimonial-role">Lost 12kg · Fitness Enthusiast</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars" aria-label="5 stars">⭐⭐⭐⭐⭐</div>
+          <div class="testimonial-quote" aria-hidden="true">"</div>
+          <p class="testimonial-text">As a personal trainer, I recommend NutriTrack to all my clients. The macro breakdown and weekly charts help them stay on track between sessions.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" style="background:linear-gradient(135deg,#22C55E,#16A34A)" aria-hidden="true">JR</div>
+            <div>
+              <div class="testimonial-name">James Rodriguez</div>
+              <div class="testimonial-role">Certified Personal Trainer</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars" aria-label="5 stars">⭐⭐⭐⭐⭐</div>
+          <div class="testimonial-quote" aria-hidden="true">"</div>
+          <p class="testimonial-text">The water tracking feature is genius. I always forgot to hydrate, but now I hit my 2.5L goal every single day. Plus the dark mode is 🔥</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" style="background:linear-gradient(135deg,#F59E0B,#EF4444)" aria-hidden="true">AL</div>
+            <div>
+              <div class="testimonial-name">Aisha Lindqvist</div>
+              <div class="testimonial-role">Marathon Runner</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ───────────────────────────────────────────────── -->
+  <section id="faq" aria-labelledby="faq-heading">
+    <div class="container text-center">
+      <p class="section-eyebrow" aria-hidden="true">❓ FAQ</p>
+      <h2 class="section-title" id="faq-heading">Frequently Asked Questions</h2>
+      <p class="section-subtitle">Got questions? We've got answers.</p>
+
+      <div class="faq-list" role="list">
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false">
+            Is NutriTrack free to use?
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer" role="region">
+            <div class="faq-answer-inner">
+              Yes! NutriTrack is completely free to use. Sign up and start tracking your nutrition journey right away with no credit card required.
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false">
+            How is my data kept secure?
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer" role="region">
+            <div class="faq-answer-inner">
+              Your data is stored in a secure Supabase PostgreSQL database with Row-Level Security (RLS) policies. This means only you can ever access your own data. All connections are encrypted via SSL/TLS.
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false">
+            Can I use NutriTrack on mobile?
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer" role="region">
+            <div class="faq-answer-inner">
+              Absolutely! NutriTrack is fully responsive and works beautifully on all devices — phones, tablets, laptops, and desktops. No app download needed.
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false">
+            How are my daily calorie goals calculated?
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer" role="region">
+            <div class="faq-answer-inner">
+              You set your own daily calorie goal in your profile. You can also update it anytime. Macro targets (protein, carbs, fat) are automatically calculated based on your calorie goal using standard nutritional ratios.
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false">
+            Can I export or delete my data?
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer" role="region">
+            <div class="faq-answer-inner">
+              Yes. From the Settings page, you can reset any category of data (meals, water logs, weight logs) or delete everything at once. Your privacy is fully in your control.
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false">
+            What macronutrients does NutriTrack track?
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer" role="region">
+            <div class="faq-answer-inner">
+              NutriTrack tracks Calories, Protein (g), Carbohydrates (g), and Fat (g) for every meal. The dashboard shows daily totals, visual progress bars, and a macro breakdown doughnut chart.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ───────────────────────────────────────────────── -->
+  <section class="cta-section" aria-labelledby="cta-heading">
+    <div class="container">
+      <h2 class="cta-title" id="cta-heading">Ready to Transform Your Health?</h2>
+      <p class="cta-subtitle">Join 50,000+ users who are already hitting their goals with NutriTrack.</p>
+      <div class="cta-actions">
+        <a href="signup.html" class="btn btn-white btn-xl">🚀 Get Started Free</a>
+        <a href="login.html"  class="btn btn-xl" style="background:rgba(255,255,255,0.15);color:#fff;border:2px solid rgba(255,255,255,0.4)">
+          Already have an account?
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────── -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo" style="color:#fff;margin-bottom:var(--space-4)">
+            <div class="logo-icon" aria-hidden="true">🥗</div>
+            <span class="logo-text" style="color:#fff">Nutri<span>Track</span></span>
+          </div>
+          <p class="footer-desc">The premium nutrition tracking app for people who take their health seriously. Beautiful. Intelligent. Effective.</p>
+          <div class="footer-socials" aria-label="Social media links">
+            <button class="social-btn" title="Twitter" aria-label="Twitter">𝕏</button>
+            <button class="social-btn" title="Instagram" aria-label="Instagram">📷</button>
+            <button class="social-btn" title="LinkedIn" aria-label="LinkedIn">in</button>
+          </div>
+        </div>
+        <div>
+          <h3 class="footer-col-title">Product</h3>
+          <div class="footer-links">
+            <a href="#features">Features</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="signup.html">Sign Up</a>
+            <a href="login.html">Log In</a>
+          </div>
+        </div>
+        <div>
+          <h3 class="footer-col-title">Tracker</h3>
+          <div class="footer-links">
+            <a href="meals.html">Meal Tracker</a>
+            <a href="water.html">Water Tracker</a>
+            <a href="weight.html">Weight Tracker</a>
+            <a href="profile.html">My Profile</a>
+          </div>
+        </div>
+        <div>
+          <h3 class="footer-col-title">Support</h3>
+          <div class="footer-links">
+            <a href="#faq">FAQ</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 NutriTrack. All rights reserved.</span>
+        <span>Made with ❤️ for your health journey</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

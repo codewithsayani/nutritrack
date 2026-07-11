@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NutriTrack Profile — Manage your personal details and fitness goals.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Profile — NutriTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script>
+    const t = localStorage.getItem('nt_theme');
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+</head>
+<body>
+  <div id="toast-container" role="alert" aria-live="polite"></div>
+
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="App navigation">
+      <div class="sidebar-top">
+        <a href="index.html" class="sidebar-logo">
+          <div class="logo-icon" aria-hidden="true">🥗</div>
+          <span class="logo-label">Nutri<span>Track</span></span>
+        </a>
+        <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Toggle sidebar">◀</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <a href="dashboard.html" class="nav-item" data-tooltip="Dashboard"><span class="nav-item-icon" aria-hidden="true">📊</span><span class="nav-item-label">Dashboard</span></a>
+        <a href="meals.html"     class="nav-item" data-tooltip="Meals"><span class="nav-item-icon" aria-hidden="true">🍽️</span><span class="nav-item-label">Meals</span></a>
+        <a href="water.html"     class="nav-item" data-tooltip="Water"><span class="nav-item-icon" aria-hidden="true">💧</span><span class="nav-item-label">Water</span></a>
+        <a href="weight.html"    class="nav-item" data-tooltip="Weight"><span class="nav-item-icon" aria-hidden="true">⚖️</span><span class="nav-item-label">Weight</span></a>
+        <div class="nav-section-label">Account</div>
+        <a href="profile.html"  class="nav-item" data-tooltip="Profile"><span class="nav-item-icon" aria-hidden="true">👤</span><span class="nav-item-label">Profile</span></a>
+        <a href="settings.html" class="nav-item" data-tooltip="Settings"><span class="nav-item-icon" aria-hidden="true">⚙️</span><span class="nav-item-label">Settings</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <a href="profile.html" class="sidebar-profile">
+          <div class="sidebar-avatar" data-profile-avatar>U</div>
+          <div class="sidebar-profile-info">
+            <div class="sidebar-profile-name" data-profile-name>Loading...</div>
+            <div class="sidebar-profile-role">Premium Member</div>
+          </div>
+        </a>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay" aria-hidden="true"></div>
+
+    <main class="main-content" id="main-content">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <button class="navbar-icon-btn" id="mobile-menu-toggle" aria-label="Open menu" style="display:none">☰</button>
+          <div>
+            <div class="page-title">My Profile</div>
+            <div class="page-subtitle">Manage your personal details and goals</div>
+          </div>
+        </div>
+        <div class="navbar-right">
+          <a href="profile.html" class="navbar-avatar" data-profile-avatar aria-label="View profile">U</a>
+        </div>
+      </header>
+
+      <div class="page-content">
+
+        <!-- Profile Header Card -->
+        <div class="profile-header-card">
+          <div class="profile-avatar-wrapper">
+            <div class="profile-avatar-large" id="profile-header-avatar">U</div>
+            <label class="avatar-upload-btn" id="avatar-upload-btn" title="Upload photo" aria-label="Upload profile photo">
+              📷
+            </label>
+            <input type="file" id="avatar-file" class="avatar-file-input" accept="image/*">
+          </div>
+          <div class="profile-header-info">
+            <div class="profile-name" data-profile-name>Loading...</div>
+            <div class="profile-email" id="profile-email"></div>
+            <div class="profile-badges">
+              <span class="profile-badge">✨ Premium Member</span>
+              <span class="profile-badge" id="profile-goal-badge">Set your goal</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Form -->
+        <div class="profile-form-card">
+          <form id="profile-form" novalidate>
+
+            <!-- Personal Info -->
+            <div class="profile-form-section">
+              <h2 class="profile-section-title">👤 Personal Information</h2>
+              <div class="profile-form-grid">
+                <div class="form-group">
+                  <label class="form-label" for="name">Full Name</label>
+                  <input type="text" id="name" name="name" class="form-input" placeholder="Your full name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="age">Age</label>
+                  <input type="number" id="age" name="age" class="form-input" placeholder="Years" min="1" max="120">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="gender">Gender</label>
+                  <select id="gender" name="gender" class="form-select">
+                    <option value="">Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                    <option value="prefer_not_to_say">Prefer not to say</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Body Metrics -->
+            <div class="profile-form-section">
+              <h2 class="profile-section-title">📏 Body Metrics</h2>
+              <div class="profile-form-grid">
+                <div class="form-group">
+                  <label class="form-label" for="height">Height (cm)</label>
+                  <input type="number" id="height" name="height" class="form-input"
+                    placeholder="e.g. 175" min="50" max="300" step="0.1">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="weight">Current Weight (kg)</label>
+                  <input type="number" id="weight" name="weight" class="form-input"
+                    placeholder="e.g. 72.5" min="10" max="500" step="0.1">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="goal_weight">Goal Weight (kg)</label>
+                  <input type="number" id="goal_weight" name="goal_weight" class="form-input"
+                    placeholder="e.g. 65" min="10" max="500" step="0.1">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Current BMI</label>
+                  <div class="form-input" style="background:var(--bg-alt);cursor:default;font-weight:700;color:var(--primary)" id="bmi-display">–</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Activity Level -->
+            <div class="profile-form-section">
+              <h2 class="profile-section-title">🏃 Activity Level</h2>
+              <div class="activity-grid" role="radiogroup" aria-label="Activity level selection">
+                <div>
+                  <input type="radio" name="activity_level" id="act-sedentary" value="sedentary" class="activity-option">
+                  <label for="act-sedentary" class="activity-label">
+                    <span class="act-icon">🛋️</span>
+                    Sedentary
+                  </label>
+                </div>
+                <div>
+                  <input type="radio" name="activity_level" id="act-lightly" value="lightly_active" class="activity-option">
+                  <label for="act-lightly" class="activity-label">
+                    <span class="act-icon">🚶</span>
+                    Lightly Active
+                  </label>
+                </div>
+                <div>
+                  <input type="radio" name="activity_level" id="act-moderately" value="moderately_active" class="activity-option">
+                  <label for="act-moderately" class="activity-label">
+                    <span class="act-icon">🏊</span>
+                    Moderate
+                  </label>
+                </div>
+                <div>
+                  <input type="radio" name="activity_level" id="act-very" value="very_active" class="activity-option">
+                  <label for="act-very" class="activity-label">
+                    <span class="act-icon">🏋️</span>
+                    Very Active
+                  </label>
+                </div>
+                <div>
+                  <input type="radio" name="activity_level" id="act-extra" value="extra_active" class="activity-option">
+                  <label for="act-extra" class="activity-label">
+                    <span class="act-icon">🏆</span>
+                    Extra Active
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Nutrition Goals -->
+            <div class="profile-form-section">
+              <h2 class="profile-section-title">🎯 Nutrition Goals</h2>
+              <div class="profile-form-grid">
+                <div class="form-group">
+                  <label class="form-label" for="daily_calorie_goal">Daily Calorie Goal (kcal)</label>
+                  <input type="number" id="daily_calorie_goal" name="daily_calorie_goal" class="form-input"
+                    placeholder="2000" min="800" max="10000">
+                </div>
+              </div>
+              <p style="font-size:var(--fs-xs);color:var(--text-muted);margin-top:var(--space-3)">
+                Macro targets (protein, carbs, fat) are calculated automatically based on your calorie goal.
+              </p>
+            </div>
+
+            <div style="display:flex;gap:var(--space-3);flex-wrap:wrap">
+              <button type="submit" class="btn btn-primary btn-lg" id="profile-save-btn">💾 Save Profile</button>
+              <a href="dashboard.html" class="btn btn-secondary btn-lg">← Back to Dashboard</a>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="bottom-nav" role="navigation" aria-label="Mobile navigation">
+    <div class="bottom-nav-items">
+      <a href="dashboard.html" class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">📊</span><span>Home</span></a>
+      <a href="meals.html"     class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">🍽️</span><span>Meals</span></a>
+      <a href="water.html"     class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">💧</span><span>Water</span></a>
+      <a href="weight.html"    class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">⚖️</span><span>Weight</span></a>
+      <a href="profile.html"   class="bottom-nav-item active"><span class="bottom-nav-icon" aria-hidden="true">👤</span><span>Profile</span></a>
+    </div>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module">
+    import { initProfile } from './js/profile.js';
+    if (window.innerWidth <= 1024) {
+      document.getElementById('mobile-menu-toggle').style.display = 'flex';
+    }
+    initProfile();
+  </script>
+</body>
+</html>

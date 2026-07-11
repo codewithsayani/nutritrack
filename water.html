@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NutriTrack Water Tracker — Track your daily hydration.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Water Tracker — NutriTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .water-bottle-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: var(--space-8);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-5);
+    }
+    .water-ring-large {
+      position: relative;
+      width: 220px; height: 220px;
+    }
+    .water-quick-btns {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-3);
+      width: 100%;
+    }
+    .water-quick-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: var(--space-4);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-alt);
+      cursor: pointer;
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: var(--fs-base);
+      color: var(--text);
+      transition: var(--transition);
+    }
+    .water-quick-btn:hover {
+      border-color: #3B82F6;
+      background: rgba(59,130,246,0.08);
+      color: #3B82F6;
+    }
+    .water-quick-btn .btn-sub {
+      font-size: var(--fs-xs);
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .water-stats-row {
+      display: flex;
+      gap: var(--space-4);
+      width: 100%;
+      margin-top: var(--space-2);
+    }
+    .water-stat-item {
+      flex: 1;
+      background: var(--bg-alt);
+      border-radius: var(--radius-sm);
+      padding: var(--space-3);
+      text-align: center;
+    }
+    .water-stat-label { font-size: var(--fs-xs); color: var(--text-muted); }
+    .water-stat-value { font-size: var(--fs-lg); font-weight: 800; color: #3B82F6; }
+  </style>
+  <script>
+    const t = localStorage.getItem('nt_theme');
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+</head>
+<body>
+  <div id="toast-container" role="alert" aria-live="polite"></div>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="waterGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3B82F6"/>
+        <stop offset="100%" stop-color="#06B6D4"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="App navigation">
+      <div class="sidebar-top">
+        <a href="index.html" class="sidebar-logo">
+          <div class="logo-icon" aria-hidden="true">🥗</div>
+          <span class="logo-label">Nutri<span>Track</span></span>
+        </a>
+        <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Toggle sidebar">◀</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <a href="dashboard.html" class="nav-item" data-tooltip="Dashboard"><span class="nav-item-icon" aria-hidden="true">📊</span><span class="nav-item-label">Dashboard</span></a>
+        <a href="meals.html"     class="nav-item" data-tooltip="Meals"><span class="nav-item-icon" aria-hidden="true">🍽️</span><span class="nav-item-label">Meals</span></a>
+        <a href="water.html"     class="nav-item" data-tooltip="Water"><span class="nav-item-icon" aria-hidden="true">💧</span><span class="nav-item-label">Water</span></a>
+        <a href="weight.html"    class="nav-item" data-tooltip="Weight"><span class="nav-item-icon" aria-hidden="true">⚖️</span><span class="nav-item-label">Weight</span></a>
+        <div class="nav-section-label">Account</div>
+        <a href="profile.html"  class="nav-item" data-tooltip="Profile"><span class="nav-item-icon" aria-hidden="true">👤</span><span class="nav-item-label">Profile</span></a>
+        <a href="settings.html" class="nav-item" data-tooltip="Settings"><span class="nav-item-icon" aria-hidden="true">⚙️</span><span class="nav-item-label">Settings</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <a href="profile.html" class="sidebar-profile">
+          <div class="sidebar-avatar" data-profile-avatar>U</div>
+          <div class="sidebar-profile-info">
+            <div class="sidebar-profile-name" data-profile-name>Loading...</div>
+            <div class="sidebar-profile-role">Premium Member</div>
+          </div>
+        </a>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay" aria-hidden="true"></div>
+
+    <main class="main-content" id="main-content">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <button class="navbar-icon-btn" id="mobile-menu-toggle" aria-label="Open menu" style="display:none">☰</button>
+          <div>
+            <div class="page-title">Water Tracker</div>
+            <div class="page-subtitle">Stay hydrated every day</div>
+          </div>
+        </div>
+        <div class="navbar-right">
+          <a href="profile.html" class="navbar-avatar" data-profile-avatar aria-label="View profile">U</a>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <div class="water-page-grid">
+
+          <!-- Left: Main Water Tracker -->
+          <div class="water-bottle-card" role="main" aria-label="Water intake tracker">
+            <h1 class="section-header-title" style="align-self:flex-start">💧 Today's Hydration</h1>
+
+            <!-- Large Ring -->
+            <div class="water-ring-large">
+              <svg class="water-ring-svg" width="220" height="220" viewBox="0 0 220 220"
+                   aria-label="Water intake progress" role="img">
+                <circle class="water-ring-bg" cx="110" cy="110" r="95" stroke-width="14"/>
+                <circle class="water-ring-fill" id="water-ring-fill" cx="110" cy="110" r="95"
+                  stroke-dasharray="596.9" stroke-dashoffset="596.9"
+                  stroke-width="14" stroke-linecap="round"
+                  style="fill:none;stroke:url(#waterGradient);transform:rotate(-90deg);transform-origin:center;transition:stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1)"/>
+              </svg>
+              <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center">
+                <div style="font-size:var(--fs-4xl);font-weight:900;color:#3B82F6" id="water-amount">0</div>
+                <div style="font-size:var(--fs-sm);color:var(--text-muted)">ml</div>
+                <div style="font-size:var(--fs-xs);color:var(--text-light);margin-top:4px" id="water-pct">0%</div>
+              </div>
+            </div>
+
+            <!-- Status -->
+            <div id="water-status" style="font-size:var(--fs-lg);font-weight:700;color:#3B82F6">💧 Keep drinking!</div>
+
+            <!-- Stats Row -->
+            <div class="water-stats-row">
+              <div class="water-stat-item">
+                <div class="water-stat-label">Goal</div>
+                <div class="water-stat-value" id="water-goal">2500</div>
+                <div class="water-stat-label">ml</div>
+              </div>
+              <div class="water-stat-item">
+                <div class="water-stat-label">Remaining</div>
+                <div class="water-stat-value" id="water-remain">2500</div>
+                <div class="water-stat-label">ml</div>
+              </div>
+              <div class="water-stat-item">
+                <div class="water-stat-label">Progress</div>
+                <div class="water-stat-value" id="water-pct-stat">0%</div>
+                <div class="water-stat-label">of goal</div>
+              </div>
+            </div>
+
+            <!-- Quick Add Buttons -->
+            <div style="width:100%">
+              <div style="font-size:var(--fs-sm);font-weight:700;margin-bottom:var(--space-3);color:var(--text-muted)">QUICK ADD</div>
+              <div class="water-quick-btns">
+                <button class="water-quick-btn" data-add-water="150" aria-label="Add 150ml">
+                  💧 +150<span class="btn-sub">ml (sip)</span>
+                </button>
+                <button class="water-quick-btn" data-add-water="250" aria-label="Add 250ml">
+                  💧 +250<span class="btn-sub">ml (glass)</span>
+                </button>
+                <button class="water-quick-btn" data-add-water="500" aria-label="Add 500ml">
+                  💧 +500<span class="btn-sub">ml (bottle)</span>
+                </button>
+                <button class="water-quick-btn" data-add-water="1000" aria-label="Add 1000ml">
+                  💧 +1000<span class="btn-sub">ml (large)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Custom Amount -->
+            <div style="width:100%;display:flex;gap:var(--space-3)">
+              <input
+                type="number"
+                id="custom-water-amount"
+                class="form-input"
+                placeholder="Custom amount (ml)"
+                min="1" max="2000"
+                aria-label="Custom water amount in ml"
+              >
+              <button class="btn btn-accent" id="add-custom-water" style="white-space:nowrap">
+                ➕ Add
+              </button>
+            </div>
+
+            <div class="water-goal-display" id="water-goal-display">
+              Daily goal: <strong></strong> ml
+            </div>
+          </div>
+
+          <!-- Right: Log History -->
+          <div>
+            <div class="recent-meals-card" style="height:100%">
+              <div class="section-header" style="margin-bottom:var(--space-4)">
+                <h2 class="section-header-title">Today's Log</h2>
+                <span class="badge badge-primary" id="total-logs-badge">0 entries</span>
+              </div>
+              <div id="water-log-list">
+                <div class="empty-state">
+                  <div class="empty-icon">💧</div>
+                  <div class="empty-title">No logs yet</div>
+                  <p class="empty-desc">Start tracking your water intake!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="bottom-nav" role="navigation" aria-label="Mobile navigation">
+    <div class="bottom-nav-items">
+      <a href="dashboard.html" class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">📊</span><span>Home</span></a>
+      <a href="meals.html"     class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">🍽️</span><span>Meals</span></a>
+      <a href="water.html"     class="bottom-nav-item active"><span class="bottom-nav-icon" aria-hidden="true">💧</span><span>Water</span></a>
+      <a href="weight.html"    class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">⚖️</span><span>Weight</span></a>
+      <a href="profile.html"   class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">👤</span><span>Profile</span></a>
+    </div>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module">
+    import { initWater } from './js/water.js';
+    if (window.innerWidth <= 1024) {
+      document.getElementById('mobile-menu-toggle').style.display = 'flex';
+    }
+    initWater();
+  </script>
+</body>
+</html>

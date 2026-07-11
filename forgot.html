@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Reset your NutriTrack password.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Reset Password — NutriTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script>
+    const t = localStorage.getItem('nt_theme');
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+</head>
+<body>
+  <div id="toast-container" role="alert" aria-live="polite"></div>
+
+  <div class="auth-page">
+    <div class="auth-panel-left" aria-hidden="true">
+      <div class="auth-left-blob auth-left-blob-1"></div>
+      <div class="auth-left-blob auth-left-blob-2"></div>
+      <div class="auth-left-content">
+        <div class="auth-left-logo">
+          <div class="logo-icon">🥗</div>
+          <span class="logo-text">NutriTrack</span>
+        </div>
+        <div class="auth-illustration" style="text-align:center;padding:var(--space-10)">
+          <div style="font-size:4rem;margin-bottom:var(--space-5)">🔐</div>
+          <div class="auth-illustration-title">Secure Reset</div>
+          <div class="auth-illustration-sub" style="margin-top:var(--space-3)">
+            We'll send a secure link to your email so you can set a new password.
+          </div>
+        </div>
+        <div class="auth-illustration-title">No worries! 😊</div>
+        <div class="auth-illustration-sub">Password resets happen to the best of us.</div>
+      </div>
+    </div>
+
+    <div class="auth-panel-right">
+      <div class="auth-form-container animate-fade-in">
+        <div class="auth-header">
+          <a href="login.html" class="auth-back-link">← Back to Login</a>
+          <h1 class="auth-title">Forgot your password?</h1>
+          <p class="auth-subtitle">Enter your email and we'll send you a reset link.</p>
+        </div>
+
+        <div class="auth-alert" id="auth-alert" role="alert"></div>
+
+        <form class="auth-form" id="forgot-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="email">Email address</label>
+            <div class="input-group">
+              <span class="input-icon" aria-hidden="true">📧</span>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-input"
+                placeholder="you@example.com"
+                required
+                autocomplete="email"
+              >
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary auth-submit" id="forgot-btn">
+            📨 Send Reset Link
+          </button>
+        </form>
+
+        <div style="text-align:center;margin-top:var(--space-6)">
+          <a href="signup.html" class="forgot-link">Don't have an account? Sign up free</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module">
+    import { initForgotPage } from './js/auth.js';
+    initForgotPage();
+  </script>
+</body>
+</html>

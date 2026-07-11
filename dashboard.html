@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NutriTrack Dashboard — Your daily nutrition overview.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dashboard — NutriTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script>
+    const t = localStorage.getItem('nt_theme');
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+</head>
+<body>
+  <div id="toast-container" role="alert" aria-live="polite"></div>
+
+  <!-- SVG Gradient Defs -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="calGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%"   stop-color="#4F46E5"/>
+        <stop offset="100%" stop-color="#7C3AED"/>
+      </linearGradient>
+      <linearGradient id="waterGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%"   stop-color="#3B82F6"/>
+        <stop offset="100%" stop-color="#06B6D4"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="app-layout">
+    <!-- ── SIDEBAR ───────────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="App navigation">
+      <div class="sidebar-top">
+        <a href="index.html" class="sidebar-logo" aria-label="NutriTrack">
+          <div class="logo-icon" aria-hidden="true">🥗</div>
+          <span class="logo-label">Nutri<span>Track</span></span>
+        </a>
+        <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Toggle sidebar">◀</button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <a href="dashboard.html" class="nav-item" data-tooltip="Dashboard">
+          <span class="nav-item-icon" aria-hidden="true">📊</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="meals.html" class="nav-item" data-tooltip="Meals">
+          <span class="nav-item-icon" aria-hidden="true">🍽️</span>
+          <span class="nav-item-label">Meals</span>
+        </a>
+        <a href="water.html" class="nav-item" data-tooltip="Water">
+          <span class="nav-item-icon" aria-hidden="true">💧</span>
+          <span class="nav-item-label">Water</span>
+        </a>
+        <a href="weight.html" class="nav-item" data-tooltip="Weight">
+          <span class="nav-item-icon" aria-hidden="true">⚖️</span>
+          <span class="nav-item-label">Weight</span>
+        </a>
+
+        <div class="nav-section-label">Account</div>
+        <a href="profile.html" class="nav-item" data-tooltip="Profile">
+          <span class="nav-item-icon" aria-hidden="true">👤</span>
+          <span class="nav-item-label">Profile</span>
+        </a>
+        <a href="settings.html" class="nav-item" data-tooltip="Settings">
+          <span class="nav-item-icon" aria-hidden="true">⚙️</span>
+          <span class="nav-item-label">Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <a href="profile.html" class="sidebar-profile">
+          <div class="sidebar-avatar" data-profile-avatar aria-hidden="true">U</div>
+          <div class="sidebar-profile-info">
+            <div class="sidebar-profile-name" data-profile-name>Loading...</div>
+            <div class="sidebar-profile-role">Premium Member</div>
+          </div>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Sidebar Overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay" aria-hidden="true"></div>
+
+    <!-- ── MAIN CONTENT ──────────────────────────────────── -->
+    <main class="main-content" id="main-content">
+      <!-- Top Navbar -->
+      <header class="top-navbar" role="banner">
+        <div class="navbar-left">
+          <button class="navbar-icon-btn" id="mobile-menu-toggle" aria-label="Open menu" style="display:none">☰</button>
+          <div>
+            <div class="page-title">Dashboard</div>
+            <div class="page-subtitle" id="today-date">Loading...</div>
+          </div>
+        </div>
+        <div class="navbar-right">
+          <div class="date-display" aria-label="Today's date">
+            📅 <span id="today-date-short"></span>
+          </div>
+          <button class="navbar-icon-btn" id="notif-btn" title="Notifications" aria-label="Notifications">
+            🔔
+            <span class="notif-dot" aria-hidden="true"></span>
+          </button>
+          <a href="profile.html" class="navbar-avatar" data-profile-avatar aria-label="View profile">U</a>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="page-content">
+
+        <!-- ── STATS CARDS ─────────────────────────────── -->
+        <div class="stats-grid" role="region" aria-label="Today's nutrition stats">
+          <!-- Calories Consumed -->
+          <div class="stat-card cal-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-label">Calories Today</div>
+                <div class="stat-value" id="stat-calories" data-skeleton>0</div>
+                <div class="stat-unit">kcal consumed</div>
+              </div>
+              <div class="stat-icon primary" aria-hidden="true">🔥</div>
+            </div>
+            <div class="stat-progress">
+              <div class="stat-progress-bar">
+                <div class="stat-progress-fill" id="cal-progress" style="width:0%;background:linear-gradient(90deg,var(--primary),var(--secondary))"></div>
+              </div>
+            </div>
+            <div class="stat-change neutral" id="cal-goal-label">of 2000 kcal goal</div>
+          </div>
+
+          <!-- Remaining Calories -->
+          <div class="stat-card remain-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-label">Remaining</div>
+                <div class="stat-value" id="stat-remaining" data-skeleton>2000</div>
+                <div class="stat-unit">kcal left</div>
+              </div>
+              <div class="stat-icon accent" aria-hidden="true">🎯</div>
+            </div>
+            <div class="stat-change positive">💪 Keep going!</div>
+          </div>
+
+          <!-- Water Intake -->
+          <div class="stat-card water-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-label">Water Intake</div>
+                <div class="stat-value" id="stat-water" data-skeleton>0</div>
+                <div class="stat-unit">ml today</div>
+              </div>
+              <div class="stat-icon info" aria-hidden="true">💧</div>
+            </div>
+            <div class="stat-progress">
+              <div class="stat-progress-bar">
+                <div class="stat-progress-fill" id="water-progress" style="width:0%;background:linear-gradient(90deg,#3B82F6,#06B6D4)"></div>
+              </div>
+            </div>
+            <div class="stat-change neutral">of 2500 ml goal</div>
+          </div>
+
+          <!-- Weight -->
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-label">Current Weight</div>
+                <div class="stat-value" id="stat-weight" data-skeleton>–</div>
+                <div class="stat-unit">kg</div>
+              </div>
+              <div class="stat-icon secondary" aria-hidden="true">⚖️</div>
+            </div>
+            <div class="stat-change neutral" id="stat-weight-diff">Log your weight</div>
+          </div>
+        </div>
+
+        <!-- ── DASHBOARD GRID ──────────────────────────── -->
+        <div class="dashboard-grid">
+
+          <!-- Macro Summary -->
+          <div class="macro-card">
+            <div class="macro-card-header">
+              <h2 class="macro-card-title">Today's Macros</h2>
+              <a href="meals.html" class="btn btn-ghost btn-sm">View All</a>
+            </div>
+            <div class="macro-items">
+              <div class="macro-item">
+                <div class="macro-item-header">
+                  <span class="macro-item-label">🥩 Protein</span>
+                  <span class="macro-item-value" style="color:var(--primary)" id="protein-val">0g</span>
+                </div>
+                <div class="macro-bar"><div class="macro-fill protein" id="protein-bar" style="width:0%"></div></div>
+                <div class="macro-item-goal" id="protein-goal">/ 0g goal</div>
+              </div>
+              <div class="macro-item">
+                <div class="macro-item-header">
+                  <span class="macro-item-label">🌾 Carbs</span>
+                  <span class="macro-item-value" style="color:var(--warning)" id="carbs-val">0g</span>
+                </div>
+                <div class="macro-bar"><div class="macro-fill carbs" id="carbs-bar" style="width:0%"></div></div>
+                <div class="macro-item-goal" id="carbs-goal">/ 0g goal</div>
+              </div>
+              <div class="macro-item">
+                <div class="macro-item-header">
+                  <span class="macro-item-label">🥑 Fat</span>
+                  <span class="macro-item-value" style="color:var(--accent)" id="fat-val">0g</span>
+                </div>
+                <div class="macro-bar"><div class="macro-fill fat" id="fat-bar" style="width:0%"></div></div>
+                <div class="macro-item-goal" id="fat-goal">/ 0g goal</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Macros Doughnut -->
+          <div class="macro-card">
+            <div class="macro-card-header">
+              <h2 class="macro-card-title">Macro Split</h2>
+            </div>
+            <div class="macro-doughnut-wrapper">
+              <div class="macro-chart-container">
+                <canvas id="macros-chart" aria-label="Macros doughnut chart" role="img"></canvas>
+                <div class="macro-chart-center">
+                  <div class="macro-chart-value" id="macro-center-val">0</div>
+                  <div class="macro-chart-label">kcal</div>
+                </div>
+              </div>
+              <div class="macro-legend">
+                <div class="macro-legend-item">
+                  <div class="legend-dot protein" aria-hidden="true"></div>
+                  <span class="legend-name">Protein</span>
+                  <span class="legend-grams" id="legend-protein">0g</span>
+                </div>
+                <div class="macro-legend-item">
+                  <div class="legend-dot carbs" aria-hidden="true"></div>
+                  <span class="legend-name">Carbs</span>
+                  <span class="legend-grams" id="legend-carbs">0g</span>
+                </div>
+                <div class="macro-legend-item">
+                  <div class="legend-dot fat" aria-hidden="true"></div>
+                  <span class="legend-name">Fat</span>
+                  <span class="legend-grams" id="legend-fat">0g</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Water Widget -->
+          <div class="water-card">
+            <h2 class="macro-card-title" style="margin-bottom:0">💧 Water</h2>
+            <div class="water-progress-ring">
+              <svg class="water-ring-svg" width="120" height="120" viewBox="0 0 120 120" aria-label="Water intake progress ring" role="img">
+                <circle class="water-ring-bg" cx="60" cy="60" r="54"/>
+                <circle class="water-ring-fill" id="water-ring-fill-widget" cx="60" cy="60" r="54"
+                  stroke-dasharray="339.3" stroke-dashoffset="339.3"
+                  style="stroke:url(#waterGradient)"/>
+              </svg>
+              <div class="water-ring-center">
+                <div class="water-amount" id="water-widget-amount">0</div>
+                <div class="water-unit">ml</div>
+              </div>
+            </div>
+            <div class="water-goal-display">Goal: <strong id="water-widget-goal">2500</strong> ml</div>
+            <a href="water.html" class="btn btn-ghost btn-sm" style="margin-top:var(--space-3)">Manage Water</a>
+          </div>
+
+          <!-- Calorie Chart -->
+          <div class="chart-card span-2">
+            <div class="chart-card-header">
+              <h2 class="chart-title">Calorie History</h2>
+              <div class="chart-controls" role="tablist">
+                <button class="chart-tab active" data-chart="weekly" role="tab" aria-selected="true">Weekly</button>
+                <button class="chart-tab"        data-chart="monthly" role="tab" aria-selected="false">Monthly</button>
+              </div>
+            </div>
+            <div class="chart-panel" data-panel="weekly">
+              <div class="chart-container">
+                <canvas id="weekly-chart" aria-label="Weekly calorie chart" role="img"></canvas>
+              </div>
+            </div>
+            <div class="chart-panel" data-panel="monthly" style="display:none">
+              <div class="chart-container">
+                <canvas id="monthly-chart" aria-label="Monthly calorie chart" role="img"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- BMI Card -->
+          <div class="bmi-card">
+            <h2 class="macro-card-title" style="margin-bottom:var(--space-4)">⚖️ BMI</h2>
+            <div class="bmi-value" id="bmi-value">–</div>
+            <div class="bmi-category" id="bmi-category">–</div>
+            <div class="bmi-scale" aria-label="BMI scale">
+              <div class="bmi-indicator" id="bmi-indicator"></div>
+            </div>
+            <div class="bmi-labels" aria-hidden="true">
+              <span>Underweight</span>
+              <span>Normal</span>
+              <span>Overweight</span>
+              <span>Obese</span>
+            </div>
+            <a href="weight.html" class="btn btn-ghost btn-sm" style="margin-top:var(--space-4);width:100%">Track Weight</a>
+          </div>
+
+        </div>
+
+        <!-- ── RECENT MEALS ────────────────────────────── -->
+        <div class="recent-meals-card">
+          <div class="section-header">
+            <h2 class="section-header-title">Today's Meals</h2>
+            <div style="display:flex;gap:var(--space-3)">
+              <button class="btn btn-secondary btn-sm" id="quick-add-btn">+ Quick Add</button>
+              <a href="meals.html" class="btn btn-primary btn-sm">View All Meals</a>
+            </div>
+          </div>
+          <div class="meal-list" id="recent-meals-list">
+            <!-- Skeleton -->
+            <div class="skeleton skeleton-card" style="height:64px"></div>
+            <div class="skeleton skeleton-card" style="height:64px"></div>
+            <div class="skeleton skeleton-card" style="height:64px"></div>
+          </div>
+        </div>
+
+      </div><!-- /page-content -->
+    </main><!-- /main-content -->
+  </div><!-- /app-layout -->
+
+  <!-- ── MOBILE BOTTOM NAV ──────────────────────────────── -->
+  <nav class="bottom-nav" role="navigation" aria-label="Mobile navigation">
+    <div class="bottom-nav-items">
+      <a href="dashboard.html" class="bottom-nav-item active">
+        <span class="bottom-nav-icon" aria-hidden="true">📊</span>
+        <span>Home</span>
+      </a>
+      <a href="meals.html" class="bottom-nav-item">
+        <span class="bottom-nav-icon" aria-hidden="true">🍽️</span>
+        <span>Meals</span>
+      </a>
+      <a href="water.html" class="bottom-nav-item">
+        <span class="bottom-nav-icon" aria-hidden="true">💧</span>
+        <span>Water</span>
+      </a>
+      <a href="weight.html" class="bottom-nav-item">
+        <span class="bottom-nav-icon" aria-hidden="true">⚖️</span>
+        <span>Weight</span>
+      </a>
+      <a href="profile.html" class="bottom-nav-item">
+        <span class="bottom-nav-icon" aria-hidden="true">👤</span>
+        <span>Profile</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ── QUICK ADD MEAL MODAL ───────────────────────────── -->
+  <div class="modal-overlay" id="quick-add-modal" role="dialog" aria-modal="true" aria-labelledby="quick-add-title">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="quick-add-title">➕ Quick Add Meal</h2>
+        <button class="modal-close" id="quick-add-close" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="quick-add-form" novalidate>
+          <div class="meal-form-grid">
+            <div class="form-group full-width">
+              <label class="form-label" for="qa-meal-name">Meal Name *</label>
+              <input type="text" id="qa-meal-name" name="meal_name" class="form-input" placeholder="e.g. Chicken & Rice" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="qa-meal-type">Meal Type *</label>
+              <select id="qa-meal-type" name="meal_type" class="form-select" required>
+                <option value="breakfast">🌅 Breakfast</option>
+                <option value="lunch">☀️ Lunch</option>
+                <option value="dinner">🌙 Dinner</option>
+                <option value="snack">🍎 Snack</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="qa-serving">Serving Size</label>
+              <input type="text" id="qa-serving" name="serving" class="form-input" placeholder="1 cup">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="qa-calories">Calories (kcal) *</label>
+              <input type="number" id="qa-calories" name="calories" class="form-input" placeholder="0" min="0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="qa-protein">Protein (g)</label>
+              <input type="number" id="qa-protein" name="protein" class="form-input" placeholder="0" min="0" step="0.1">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="qa-carbs">Carbs (g)</label>
+              <input type="number" id="qa-carbs" name="carbs" class="form-input" placeholder="0" min="0" step="0.1">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="qa-fat">Fat (g)</label>
+              <input type="number" id="qa-fat" name="fat" class="form-input" placeholder="0" min="0" step="0.1">
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label" for="qa-notes">Notes (optional)</label>
+              <textarea id="qa-notes" name="notes" class="form-textarea" placeholder="Any additional notes..." style="min-height:70px"></textarea>
+            </div>
+          </div>
+          <div style="display:flex;gap:var(--space-3);margin-top:var(--space-4)">
+            <button type="button" class="btn btn-secondary" id="quick-add-close-btn" onclick="document.getElementById('quick-add-modal').classList.remove('open')">Cancel</button>
+            <button type="submit" class="btn btn-primary" style="flex:1">Add Meal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module">
+    import { initDashboard } from './js/dashboard.js';
+
+    // Short date in navbar
+    document.getElementById('today-date-short').textContent =
+      new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+    // Show mobile menu toggle on small screens
+    if (window.innerWidth <= 1024) {
+      document.getElementById('mobile-menu-toggle').style.display = 'flex';
+    }
+
+    initDashboard();
+  </script>
+</body>
+</html>

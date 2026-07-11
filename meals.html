@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NutriTrack Meal Tracker — Log and manage all your meals.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Meals — NutriTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script>
+    const t = localStorage.getItem('nt_theme');
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+</head>
+<body>
+  <div id="toast-container" role="alert" aria-live="polite"></div>
+
+  <div class="app-layout">
+    <!-- SIDEBAR (same pattern) -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="App navigation">
+      <div class="sidebar-top">
+        <a href="index.html" class="sidebar-logo">
+          <div class="logo-icon" aria-hidden="true">🥗</div>
+          <span class="logo-label">Nutri<span>Track</span></span>
+        </a>
+        <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Toggle sidebar">◀</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <a href="dashboard.html" class="nav-item" data-tooltip="Dashboard">
+          <span class="nav-item-icon" aria-hidden="true">📊</span><span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="meals.html" class="nav-item" data-tooltip="Meals">
+          <span class="nav-item-icon" aria-hidden="true">🍽️</span><span class="nav-item-label">Meals</span>
+        </a>
+        <a href="water.html" class="nav-item" data-tooltip="Water">
+          <span class="nav-item-icon" aria-hidden="true">💧</span><span class="nav-item-label">Water</span>
+        </a>
+        <a href="weight.html" class="nav-item" data-tooltip="Weight">
+          <span class="nav-item-icon" aria-hidden="true">⚖️</span><span class="nav-item-label">Weight</span>
+        </a>
+        <div class="nav-section-label">Account</div>
+        <a href="profile.html" class="nav-item" data-tooltip="Profile">
+          <span class="nav-item-icon" aria-hidden="true">👤</span><span class="nav-item-label">Profile</span>
+        </a>
+        <a href="settings.html" class="nav-item" data-tooltip="Settings">
+          <span class="nav-item-icon" aria-hidden="true">⚙️</span><span class="nav-item-label">Settings</span>
+        </a>
+      </nav>
+      <div class="sidebar-bottom">
+        <a href="profile.html" class="sidebar-profile">
+          <div class="sidebar-avatar" data-profile-avatar>U</div>
+          <div class="sidebar-profile-info">
+            <div class="sidebar-profile-name" data-profile-name>Loading...</div>
+            <div class="sidebar-profile-role">Premium Member</div>
+          </div>
+        </a>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay" aria-hidden="true"></div>
+
+    <main class="main-content" id="main-content">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <button class="navbar-icon-btn" id="mobile-menu-toggle" aria-label="Open menu" style="display:none">☰</button>
+          <div>
+            <div class="page-title">Meal Tracker</div>
+            <div class="page-subtitle">Log and manage your daily meals</div>
+          </div>
+        </div>
+        <div class="navbar-right">
+          <a href="profile.html" class="navbar-avatar" data-profile-avatar aria-label="View profile">U</a>
+        </div>
+      </header>
+
+      <div class="page-content">
+
+        <!-- Summary Cards -->
+        <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:var(--space-5)" role="region" aria-label="Meal summary">
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-label">Total Calories</div>
+                <div class="stat-value" id="summary-cal">0</div>
+                <div class="stat-unit">kcal</div>
+              </div>
+              <div class="stat-icon primary" aria-hidden="true">🔥</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-label">Meals Logged</div>
+                <div class="stat-value" id="summary-count">0</div>
+                <div class="stat-unit">entries</div>
+              </div>
+              <div class="stat-icon accent" aria-hidden="true">🍽️</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-label">Avg. per Meal</div>
+                <div class="stat-value" id="summary-avg">0</div>
+                <div class="stat-unit">kcal/meal</div>
+              </div>
+              <div class="stat-icon warning" aria-hidden="true">📈</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Macro Totals -->
+        <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:var(--space-5)">
+          <div class="stat-card" style="padding:var(--space-4)">
+            <div class="stat-label">Protein</div>
+            <div class="stat-value" style="font-size:var(--fs-2xl)" id="summary-protein">0g</div>
+          </div>
+          <div class="stat-card" style="padding:var(--space-4)">
+            <div class="stat-label">Carbs</div>
+            <div class="stat-value" style="font-size:var(--fs-2xl)" id="summary-carbs">0g</div>
+          </div>
+          <div class="stat-card" style="padding:var(--space-4)">
+            <div class="stat-label">Fat</div>
+            <div class="stat-value" style="font-size:var(--fs-2xl)" id="summary-fat">0g</div>
+          </div>
+        </div>
+
+        <!-- Page Header + Filters -->
+        <div class="page-header">
+          <div class="page-header-info">
+            <h1 class="page-header-title">My Meals</h1>
+            <p class="page-header-sub">Filter by date and meal type</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-primary" id="add-meal-btn">➕ Add Meal</button>
+          </div>
+        </div>
+
+        <div class="filters-bar" role="search" aria-label="Filter meals">
+          <input type="date" id="date-filter" class="filter-date" aria-label="Filter by date">
+          <select id="type-filter" class="filter-select" aria-label="Filter by meal type">
+            <option value="all">All Types</option>
+            <option value="breakfast">🌅 Breakfast</option>
+            <option value="lunch">☀️ Lunch</option>
+            <option value="dinner">🌙 Dinner</option>
+            <option value="snack">🍎 Snack</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" id="clear-filters">✕ Clear</button>
+        </div>
+
+        <!-- Meals Table -->
+        <div class="data-table-wrapper">
+          <table class="data-table" aria-label="Meals table">
+            <thead>
+              <tr>
+                <th scope="col">Meal</th>
+                <th scope="col">Type</th>
+                <th scope="col">Calories</th>
+                <th scope="col">Protein</th>
+                <th scope="col">Carbs</th>
+                <th scope="col">Fat</th>
+                <th scope="col">Date & Time</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="meals-tbody">
+              <tr><td colspan="8"><div class="skeleton skeleton-card" style="height:48px"></div></td></tr>
+              <tr><td colspan="8"><div class="skeleton skeleton-card" style="height:48px"></div></td></tr>
+              <tr><td colspan="8"><div class="skeleton skeleton-card" style="height:48px"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div><!-- /page-content -->
+    </main>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="bottom-nav" role="navigation" aria-label="Mobile navigation">
+    <div class="bottom-nav-items">
+      <a href="dashboard.html" class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">📊</span><span>Home</span></a>
+      <a href="meals.html" class="bottom-nav-item active"><span class="bottom-nav-icon" aria-hidden="true">🍽️</span><span>Meals</span></a>
+      <a href="water.html" class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">💧</span><span>Water</span></a>
+      <a href="weight.html" class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">⚖️</span><span>Weight</span></a>
+      <a href="profile.html" class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">👤</span><span>Profile</span></a>
+    </div>
+  </nav>
+
+  <!-- ADD/EDIT MEAL MODAL -->
+  <div class="modal-overlay" id="meal-modal" role="dialog" aria-modal="true" aria-labelledby="meal-modal-title">
+    <div class="modal" style="max-width:600px">
+      <div class="modal-header">
+        <h2 class="modal-title" id="meal-modal-title">➕ Add Meal</h2>
+        <button class="modal-close" id="meal-modal-close" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="meal-form" novalidate>
+          <div class="meal-form-grid">
+            <div class="form-group full-width">
+              <label class="form-label" for="meal-name">Meal Name *</label>
+              <input type="text" id="meal-name" name="meal_name" class="form-input" placeholder="e.g. Grilled Salmon" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="meal-type">Meal Type *</label>
+              <select id="meal-type" name="meal_type" class="form-select" required>
+                <option value="breakfast">🌅 Breakfast</option>
+                <option value="lunch">☀️ Lunch</option>
+                <option value="dinner">🌙 Dinner</option>
+                <option value="snack">🍎 Snack</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="meal-serving">Serving Size</label>
+              <input type="text" id="meal-serving" name="serving" class="form-input" placeholder="e.g. 1 cup, 200g">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="meal-calories">Calories (kcal) *</label>
+              <input type="number" id="meal-calories" name="calories" class="form-input" placeholder="0" min="0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="meal-protein">Protein (g)</label>
+              <input type="number" id="meal-protein" name="protein" class="form-input" placeholder="0" min="0" step="0.1">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="meal-carbs">Carbs (g)</label>
+              <input type="number" id="meal-carbs" name="carbs" class="form-input" placeholder="0" min="0" step="0.1">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="meal-fat">Fat (g)</label>
+              <input type="number" id="meal-fat" name="fat" class="form-input" placeholder="0" min="0" step="0.1">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="meal-date">Date *</label>
+              <input type="date" id="meal-date" name="meal_date" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="meal-time">Time</label>
+              <input type="time" id="meal-time" name="meal_time" class="form-input">
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label" for="meal-notes">Notes (optional)</label>
+              <textarea id="meal-notes" name="notes" class="form-textarea" placeholder="Any additional notes..."></textarea>
+            </div>
+          </div>
+          <div style="display:flex;gap:var(--space-3);margin-top:var(--space-4)">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('meal-modal').classList.remove('open')">Cancel</button>
+            <button type="submit" class="btn btn-primary" style="flex:1">Add Meal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module">
+    import { initMeals } from './js/meals.js';
+    if (window.innerWidth <= 1024) {
+      document.getElementById('mobile-menu-toggle').style.display = 'flex';
+    }
+    initMeals();
+  </script>
+</body>
+</html>
