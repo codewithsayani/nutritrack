@@ -8,8 +8,8 @@
    3. Copy "anon public" key → SUPABASE_ANON_KEY
    ============================================================ */
 
-const SUPABASE_URL      = 'https://YOUR_PROJECT_REF.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE';
+const SUPABASE_URL      = 'https://xtiamfmzgxpehvnvypqw.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0aWFtZm16Z3hwZWh2bnZ5cHF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3NDU2MjUsImV4cCI6MjA5OTMyMTYyNX0.ttA9y0rFuX0g7sXyjwH_2JGYg16XiI79s_kYeBdWEys';
 
 // ── Supabase Client (loaded via CDN in every HTML page) ──────
 export const supabase = window.supabase.createClient(
