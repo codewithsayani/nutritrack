@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NutriTrack Weight Tracker — Monitor your weight and BMI.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Weight Tracker — NutriTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script>
+    const t = localStorage.getItem('nt_theme');
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+</head>
+<body>
+  <div id="toast-container" role="alert" aria-live="polite"></div>
+
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="App navigation">
+      <div class="sidebar-top">
+        <a href="index.html" class="sidebar-logo">
+          <div class="logo-icon" aria-hidden="true">🥗</div>
+          <span class="logo-label">Nutri<span>Track</span></span>
+        </a>
+        <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Toggle sidebar">◀</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <a href="dashboard.html" class="nav-item" data-tooltip="Dashboard"><span class="nav-item-icon" aria-hidden="true">📊</span><span class="nav-item-label">Dashboard</span></a>
+        <a href="meals.html"     class="nav-item" data-tooltip="Meals"><span class="nav-item-icon" aria-hidden="true">🍽️</span><span class="nav-item-label">Meals</span></a>
+        <a href="water.html"     class="nav-item" data-tooltip="Water"><span class="nav-item-icon" aria-hidden="true">💧</span><span class="nav-item-label">Water</span></a>
+        <a href="weight.html"    class="nav-item" data-tooltip="Weight"><span class="nav-item-icon" aria-hidden="true">⚖️</span><span class="nav-item-label">Weight</span></a>
+        <a href="exercise.html" class="nav-item" data-tooltip="Exercise"><span class="nav-item-icon" aria-hidden="true">🏃</span><span class="nav-item-label">Exercise</span></a>
+        <a href="diet-plan.html" class="nav-item" data-tooltip="Diet Plan"><span class="nav-item-icon" aria-hidden="true">🥗</span><span class="nav-item-label">Diet Plan</span></a>
+        <div class="nav-section-label">Account</div>
+        <a href="profile.html"  class="nav-item" data-tooltip="Profile"><span class="nav-item-icon" aria-hidden="true">👤</span><span class="nav-item-label">Profile</span></a>
+        <a href="settings.html" class="nav-item" data-tooltip="Settings"><span class="nav-item-icon" aria-hidden="true">⚙️</span><span class="nav-item-label">Settings</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <a href="profile.html" class="sidebar-profile">
+          <div class="sidebar-avatar" data-profile-avatar>U</div>
+          <div class="sidebar-profile-info">
+            <div class="sidebar-profile-name" data-profile-name>Loading...</div>
+            <div class="sidebar-profile-role">Premium Member</div>
+          </div>
+        </a>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay" aria-hidden="true"></div>
+
+    <main class="main-content" id="main-content">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <button class="navbar-icon-btn" id="mobile-menu-toggle" aria-label="Open menu" style="display:none">☰</button>
+          <div>
+            <div class="page-title">Diet Plan</div>
+            <div class="page-subtitle">Custom morning-to-night healthy diet chart</div>
+          </div>
+        </div>
+        <div class="navbar-right">
+          <a href="profile.html" class="navbar-avatar" data-profile-avatar aria-label="View profile">U</a>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <div class="dashboard-grid" style="grid-template-columns:1fr; max-width:800px; margin:0 auto;">
+          
+          <div class="stats-grid" style="grid-template-columns:1fr 1fr; margin-bottom:var(--space-4);">
+            <div class="stat-card">
+              <div class="stat-card-header">
+                <div>
+                  <div class="stat-label">Daily Calorie Target</div>
+                  <div class="stat-value" id="diet-calorie-target" style="font-size:var(--fs-2xl); color:var(--primary);">– kcal</div>
+                </div>
+                <div class="stat-icon primary" aria-hidden="true">🎯</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-header">
+                <div>
+                  <div class="stat-label">Current Goal</div>
+                  <div class="stat-value" id="diet-goal-type" style="font-size:var(--fs-xl); text-transform:capitalize;">–</div>
+                </div>
+                <div class="stat-icon accent" aria-hidden="true">⚖️</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h2 class="chart-title">🥗 Your Prescribed Diet Chart</h2>
+            </div>
+            
+            <div id="diet-loading" style="padding:var(--space-6); text-align:center; color:var(--text-muted);">
+              Loading your custom diet plan...
+            </div>
+
+            <div id="diet-plan-content" style="display:none; margin-top:var(--space-4); display:flex; flex-direction:column; gap:var(--space-4);">
+              <!-- Breakfast -->
+              <div style="background:var(--bg-alt); padding:var(--space-4); border-radius:var(--radius-md); border-left:4px solid var(--primary);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:var(--space-2);">
+                  <h3 style="font-size:var(--fs-lg); font-weight:600;">🌅 Breakfast <span style="font-size:var(--fs-sm); color:var(--text-muted); font-weight:normal;">(8:00 AM)</span></h3>
+                  <div style="font-weight:600; color:var(--primary);" id="meal-cal-breakfast"></div>
+                </div>
+                <ul id="meal-items-breakfast" style="margin-left:var(--space-5); color:var(--text); line-height:1.6;"></ul>
+              </div>
+
+              <!-- Morning Snack -->
+              <div style="background:var(--bg-alt); padding:var(--space-4); border-radius:var(--radius-md); border-left:4px solid var(--info);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:var(--space-2);">
+                  <h3 style="font-size:var(--fs-lg); font-weight:600;">🍎 Morning Snack <span style="font-size:var(--fs-sm); color:var(--text-muted); font-weight:normal;">(11:00 AM)</span></h3>
+                  <div style="font-weight:600; color:var(--info);" id="meal-cal-snack1"></div>
+                </div>
+                <ul id="meal-items-snack1" style="margin-left:var(--space-5); color:var(--text); line-height:1.6;"></ul>
+              </div>
+
+              <!-- Lunch -->
+              <div style="background:var(--bg-alt); padding:var(--space-4); border-radius:var(--radius-md); border-left:4px solid var(--accent);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:var(--space-2);">
+                  <h3 style="font-size:var(--fs-lg); font-weight:600;">🍲 Lunch <span style="font-size:var(--fs-sm); color:var(--text-muted); font-weight:normal;">(1:30 PM)</span></h3>
+                  <div style="font-weight:600; color:var(--accent);" id="meal-cal-lunch"></div>
+                </div>
+                <ul id="meal-items-lunch" style="margin-left:var(--space-5); color:var(--text); line-height:1.6;"></ul>
+              </div>
+
+              <!-- Evening Snack -->
+              <div style="background:var(--bg-alt); padding:var(--space-4); border-radius:var(--radius-md); border-left:4px solid var(--warning);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:var(--space-2);">
+                  <h3 style="font-size:var(--fs-lg); font-weight:600;">☕ Evening Snack <span style="font-size:var(--fs-sm); color:var(--text-muted); font-weight:normal;">(5:00 PM)</span></h3>
+                  <div style="font-weight:600; color:var(--warning);" id="meal-cal-snack2"></div>
+                </div>
+                <ul id="meal-items-snack2" style="margin-left:var(--space-5); color:var(--text); line-height:1.6;"></ul>
+              </div>
+
+              <!-- Dinner -->
+              <div style="background:var(--bg-alt); padding:var(--space-4); border-radius:var(--radius-md); border-left:4px solid var(--secondary);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:var(--space-2);">
+                  <h3 style="font-size:var(--fs-lg); font-weight:600;">🌙 Dinner <span style="font-size:var(--fs-sm); color:var(--text-muted); font-weight:normal;">(8:30 PM)</span></h3>
+                  <div style="font-weight:600; color:var(--secondary);" id="meal-cal-dinner"></div>
+                </div>
+                <ul id="meal-items-dinner" style="margin-left:var(--space-5); color:var(--text); line-height:1.6;"></ul>
+              </div>
+
+              <p style="font-size:var(--fs-xs); color:var(--text-muted); text-align:center; margin-top:var(--space-4);">
+                *Portion sizes are estimates scaled to hit your exact calorie target. Remember to drink 2-3 liters of water throughout the day!
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="bottom-nav" role="navigation" aria-label="Mobile navigation">
+    <div class="bottom-nav-items">
+      <a href="dashboard.html" class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">📊</span><span>Home</span></a>
+      <a href="meals.html"     class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">🍽️</span><span>Meals</span></a>
+      <a href="water.html"     class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">💧</span><span>Water</span></a>
+      <a href="weight.html"    class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">⚖️</span><span>Weight</span></a>
+      <a href="profile.html"   class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">👤</span><span>Profile</span></a>
+    </div>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module">
+    import { initDietPlan } from './js/diet-plan.js';
+    if (window.innerWidth <= 1024) {
+      document.getElementById('mobile-menu-toggle').style.display = 'flex';
+    }
+    initDietPlan();
+  </script>
+</body>
+</html>

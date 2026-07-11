@@ -108,7 +108,7 @@ function renderWeightTable() {
    BMI Card
    ───────────────────────────────────────── */
 function renderBMI() {
-  const latestWeight = parseFloat(weightLogs[0]?.weight || profile.weight || 0);
+  const latestWeight = parseFloat(profile.weight || weightLogs[0]?.weight || 0);
   const height       = parseFloat(profile.height || 0);
 
   const bmiEl    = document.getElementById('bmi-value');
@@ -148,18 +148,24 @@ function renderBMI() {
    Weight Stats
    ───────────────────────────────────────── */
 function renderWeightStats() {
-  if (weightLogs.length === 0) return;
+  if (weightLogs.length === 0 && !profile.weight) return;
 
   const weights   = weightLogs.map(l => parseFloat(l.weight));
-  const current   = weights[0];
-  const heaviest  = Math.max(...weights);
-  const lightest  = Math.min(...weights);
+  const current   = parseFloat(profile.weight) || (weights.length ? weights[0] : 0);
+  const heaviest  = weights.length ? Math.max(...weights) : current;
+  const lightest  = weights.length ? Math.min(...weights) : current;
   const goalW     = parseFloat(profile.goal_weight || 0);
   const diff      = goalW ? (current - goalW).toFixed(1) : null;
 
   setText('stat-current-weight', `${current.toFixed(1)} kg`);
   setText('stat-highest-weight', `${heaviest.toFixed(1)} kg`);
   setText('stat-lowest-weight',  `${lightest.toFixed(1)} kg`);
+
+  if (goalW) {
+    setText('stat-goal-weight', `${goalW.toFixed(1)} kg`);
+  } else {
+    setText('stat-goal-weight', 'Not Set');
+  }
 
   if (diff !== null) {
     const el = document.getElementById('stat-goal-diff');
@@ -218,6 +224,9 @@ function initAddForm() {
     if (error) {
       showToast('Failed to log weight: ' + error.message, 'error');
     } else {
+      // Also update the profile weight so it syncs everywhere
+      await supabase.from('profiles').update({ weight }).eq('id', currentUser.id);
+      
       showToast(`Weight logged: ${weight} kg ⚖️`);
       form.reset();
       if (dateInput) dateInput.value = todayStr();
@@ -235,6 +244,12 @@ async function deleteWeightLog(id) {
   if (error) { showToast('Failed to delete', 'error'); return; }
   showToast('Deleted');
   await loadWeightLogs();
+
+  if (weightLogs.length > 0) {
+    await supabase.from('profiles').update({ weight: parseFloat(weightLogs[0].weight) }).eq('id', currentUser.id);
+  } else {
+    await supabase.from('profiles').update({ weight: null }).eq('id', currentUser.id);
+  }
 }
 
 /* ─────────────────────────────────────────

@@ -142,6 +142,7 @@ async function fetchRecentWeights(userId) {
     .select('*')
     .eq('user_id', userId)
     .order('date', { ascending: false })
+    .order('created_at', { ascending: false })
     .limit(30);
   return data || [];
 }
@@ -160,6 +161,7 @@ function renderStats(meals, waterLogs, weightLogs, profile) {
 
   setText('stat-calories',  Math.round(totalCal));
   setText('stat-remaining', Math.round(remaining));
+  setText('cal-goal-label', `of ${Math.round(goalCal)} kcal goal`);
   setText('stat-water',     Math.round(totalWater));
   if (currentW) setText('stat-weight', parseFloat(currentW).toFixed(1));
 

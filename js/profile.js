@@ -15,6 +15,7 @@ export async function initProfile() {
   initSidebar();
   await loadAndRenderProfile();
   initAvatarUpload();
+  initMacroCalculator();
 }
 
 /* ─────────────────────────────────────────
@@ -36,6 +37,7 @@ async function loadAndRenderProfile() {
   const initEls  = document.querySelectorAll('[data-profile-initial]');
   const emailEl  = document.getElementById('profile-email');
   const headerAvatar = document.getElementById('profile-header-avatar');
+  const avatarEls = document.querySelectorAll('[data-profile-avatar]');
 
   const name    = profile.name || currentUser.email?.split('@')[0] || 'User';
   const initial = name[0]?.toUpperCase() || 'U';
@@ -44,10 +46,12 @@ async function loadAndRenderProfile() {
   initEls.forEach(el  => el.textContent = initial);
   if (emailEl) emailEl.textContent = currentUser.email || '';
 
-  if (profile.avatar_url && headerAvatar) {
-    headerAvatar.innerHTML = `<img src="${profile.avatar_url}" alt="${name}" loading="lazy">`;
-  } else if (headerAvatar) {
-    headerAvatar.textContent = initial;
+  if (profile.avatar_url) {
+    if (headerAvatar) headerAvatar.innerHTML = `<img src="${profile.avatar_url}" alt="${name}" loading="lazy">`;
+    avatarEls.forEach(el => el.innerHTML = `<img src="${profile.avatar_url}" alt="${name}" loading="lazy">`);
+  } else {
+    if (headerAvatar) headerAvatar.textContent = initial;
+    avatarEls.forEach(el => el.textContent = initial);
   }
 
   // Goal badge
@@ -126,6 +130,19 @@ function initProfileForm(existingProfile) {
     const { error } = await supabase
       .from('profiles')
       .upsert({ id: currentUser.id, ...updates });
+
+    if (!error) {
+      const oldWeight = existingProfile.weight ? parseFloat(existingProfile.weight) : null;
+      if (updates.weight && updates.weight !== oldWeight) {
+        const today = new Date().toISOString().split('T')[0];
+        await supabase.from('weight_logs').insert({
+          user_id: currentUser.id,
+          weight: updates.weight,
+          date: today,
+          notes: 'Updated from Profile'
+        });
+      }
+    }
 
     if (error) {
       showToast('Failed to save profile: ' + error.message, 'error');
@@ -238,4 +255,117 @@ function setField(id, val) {
 function setText(id, val) {
   const el = document.getElementById(id);
   if (el) el.textContent = val;
+}
+
+/* ─────────────────────────────────────────
+   Macro Calculator
+   ───────────────────────────────────────── */
+function initMacroCalculator() {
+  const openBtn = document.getElementById('open-macro-calc-btn');
+  const closeBtn = document.getElementById('close-macro-calc-btn');
+  const applyBtn = document.getElementById('apply-macro-calc-btn');
+  const modal = document.getElementById('macro-calc-modal');
+  const resultsDiv = document.getElementById('macro-calc-results');
+  
+  if (!openBtn || !modal) return;
+
+  let calculatedCalories = 0;
+
+  openBtn.addEventListener('click', () => {
+    const age = parseInt(document.getElementById('age').value);
+    const genderEl = document.getElementById('gender');
+    const genderVal = genderEl ? genderEl.value : 'male';
+    const height = parseFloat(document.getElementById('height').value);
+    const weight = parseFloat(document.getElementById('weight').value);
+    const goalWeight = parseFloat(document.getElementById('goal_weight').value);
+    
+    const actInput = document.querySelector('input[name="activity_level"]:checked');
+    const activity = actInput ? actInput.value : 'sedentary';
+
+    if (!age || !height || !weight || !goalWeight) {
+      resultsDiv.innerHTML = '<p style="color:var(--danger-color);">Please fill out your Age, Gender, Height, Current Weight, and Goal Weight first.</p>';
+      modal.style.display = 'flex';
+      applyBtn.style.display = 'none';
+      return;
+    }
+
+    let bmr = (10 * weight) + (6.25 * height) - (5 * age);
+    if (genderVal === 'female') bmr -= 161;
+    else bmr += 5;
+
+    let multiplier = 1.2;
+    if (activity === 'lightly_active') multiplier = 1.375;
+    if (activity === 'moderately_active') multiplier = 1.55;
+    if (activity === 'very_active') multiplier = 1.725;
+    if (activity === 'extra_active') multiplier = 1.9;
+
+    const tdee = bmr * multiplier;
+
+    let calGoal = tdee;
+    let goalText = "Maintain Weight";
+    if (goalWeight < weight) {
+      calGoal = tdee - 500;
+      goalText = "Lose Weight (~0.5kg/week)";
+    } else if (goalWeight > weight) {
+      calGoal = tdee + 500;
+      goalText = "Gain Muscle/Weight (~0.5kg/week)";
+    }
+
+    if (genderVal === 'female' && calGoal < 1200) calGoal = 1200;
+    if (genderVal !== 'female' && calGoal < 1500) calGoal = 1500;
+
+    calculatedCalories = Math.round(calGoal);
+    const protein = Math.round((calculatedCalories * 0.30) / 4);
+    const carbs = Math.round((calculatedCalories * 0.45) / 4);
+    const fat = Math.round((calculatedCalories * 0.25) / 9);
+    const water = Math.round(weight * 35);
+
+    resultsDiv.innerHTML = `
+      <div style="background:var(--bg-card-hover); padding:var(--space-3); border-radius:var(--radius-md);">
+        <p style="margin-bottom:4px; font-size:var(--fs-sm);"><strong>Goal:</strong> ${goalText}</p>
+        <p style="margin-bottom:0; font-size:var(--fs-sm);"><strong>TDEE:</strong> ${Math.round(tdee)} kcal</p>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-card-hover); padding:var(--space-3); border-radius:var(--radius-md);">
+        <span style="font-size:var(--fs-lg); font-weight:700; color:var(--primary-color);">🔥 Calories</span>
+        <span style="font-size:var(--fs-lg); font-weight:700;">${calculatedCalories} kcal</span>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:var(--space-2); text-align:center;">
+        <div style="background:var(--bg-card-hover); padding:var(--space-2); border-radius:var(--radius-md);">
+          <div style="font-size:var(--fs-sm); color:var(--text-muted);">Protein</div>
+          <div style="font-weight:600;">${protein}g</div>
+        </div>
+        <div style="background:var(--bg-card-hover); padding:var(--space-2); border-radius:var(--radius-md);">
+          <div style="font-size:var(--fs-sm); color:var(--text-muted);">Carbs</div>
+          <div style="font-weight:600;">${carbs}g</div>
+        </div>
+        <div style="background:var(--bg-card-hover); padding:var(--space-2); border-radius:var(--radius-md);">
+          <div style="font-size:var(--fs-sm); color:var(--text-muted);">Fat</div>
+          <div style="font-weight:600;">${fat}g</div>
+        </div>
+      </div>
+      <div style="background:var(--bg-card-hover); padding:var(--space-3); border-radius:var(--radius-md); display:flex; justify-content:space-between;">
+        <span><strong>💧 Water Goal:</strong></span>
+        <span>${water} ml</span>
+      </div>
+      <p style="font-size:var(--fs-xs); color:var(--text-muted); margin-top:0;">*Water goal is estimated based on 35ml per kg of body weight.</p>
+    `;
+
+    applyBtn.style.display = 'inline-block';
+    modal.style.display = 'flex';
+  });
+
+  closeBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+  
+  applyBtn.addEventListener('click', () => {
+    const calInput = document.getElementById('daily_calorie_goal');
+    if (calInput) {
+      calInput.value = calculatedCalories;
+      calInput.style.transition = 'background-color 0.3s';
+      calInput.style.backgroundColor = 'rgba(108, 93, 211, 0.2)';
+      setTimeout(() => calInput.style.backgroundColor = '', 1000);
+    }
+    modal.style.display = 'none';
+  });
 }

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NutriTrack Weight Tracker — Monitor your weight and BMI.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Weight Tracker — NutriTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script>
+    const t = localStorage.getItem('nt_theme');
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+</head>
+<body>
+  <div id="toast-container" role="alert" aria-live="polite"></div>
+
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="App navigation">
+      <div class="sidebar-top">
+        <a href="index.html" class="sidebar-logo">
+          <div class="logo-icon" aria-hidden="true">🥗</div>
+          <span class="logo-label">Nutri<span>Track</span></span>
+        </a>
+        <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Toggle sidebar">◀</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <a href="dashboard.html" class="nav-item" data-tooltip="Dashboard"><span class="nav-item-icon" aria-hidden="true">📊</span><span class="nav-item-label">Dashboard</span></a>
+        <a href="meals.html"     class="nav-item" data-tooltip="Meals"><span class="nav-item-icon" aria-hidden="true">🍽️</span><span class="nav-item-label">Meals</span></a>
+        <a href="water.html"     class="nav-item" data-tooltip="Water"><span class="nav-item-icon" aria-hidden="true">💧</span><span class="nav-item-label">Water</span></a>
+        <a href="weight.html"    class="nav-item" data-tooltip="Weight"><span class="nav-item-icon" aria-hidden="true">⚖️</span><span class="nav-item-label">Weight</span></a>
+        <a href="exercise.html" class="nav-item" data-tooltip="Exercise"><span class="nav-item-icon" aria-hidden="true">🏃</span><span class="nav-item-label">Exercise</span></a>
+        <a href="diet-plan.html" class="nav-item" data-tooltip="Diet Plan"><span class="nav-item-icon" aria-hidden="true">🥗</span><span class="nav-item-label">Diet Plan</span></a>
+        <div class="nav-section-label">Account</div>
+        <a href="profile.html"  class="nav-item" data-tooltip="Profile"><span class="nav-item-icon" aria-hidden="true">👤</span><span class="nav-item-label">Profile</span></a>
+        <a href="settings.html" class="nav-item" data-tooltip="Settings"><span class="nav-item-icon" aria-hidden="true">⚙️</span><span class="nav-item-label">Settings</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <a href="profile.html" class="sidebar-profile">
+          <div class="sidebar-avatar" data-profile-avatar>U</div>
+          <div class="sidebar-profile-info">
+            <div class="sidebar-profile-name" data-profile-name>Loading...</div>
+            <div class="sidebar-profile-role">Premium Member</div>
+          </div>
+        </a>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay" aria-hidden="true"></div>
+
+    <main class="main-content" id="main-content">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <button class="navbar-icon-btn" id="mobile-menu-toggle" aria-label="Open menu" style="display:none">☰</button>
+          <div>
+            <div class="page-title">Exercise Calculator</div>
+            <div class="page-subtitle">Calculate calories burned during your workout</div>
+          </div>
+        </div>
+        <div class="navbar-right">
+          <a href="profile.html" class="navbar-avatar" data-profile-avatar aria-label="View profile">U</a>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <div class="dashboard-grid" style="grid-template-columns:1fr; max-width:800px; margin:0 auto; gap:var(--space-6);">
+          <!-- Exercise Calculator Card -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h2 class="chart-title">🏃 Calculate Calories Burned</h2>
+            </div>
+            <form id="exercise-form" style="display:flex;flex-direction:column;gap:var(--space-4); margin-top:var(--space-4);">
+              <div class="form-group">
+                <label class="form-label" for="exercise-select">Select Exercise *</label>
+                <select id="exercise-select" class="form-input" required>
+                  <option value="" disabled selected>Choose an exercise</option>
+                  <option value="3.5">Walking (moderate pace) - 3.5 METs</option>
+                  <option value="5.0">Walking (brisk pace) - 5.0 METs</option>
+                  <option value="9.8">Running (6 mph) - 9.8 METs</option>
+                  <option value="11.5">Running (7 mph) - 11.5 METs</option>
+                  <option value="7.5">Cycling (12-14 mph) - 7.5 METs</option>
+                  <option value="6.0">Weightlifting (vigorous) - 6.0 METs</option>
+                  <option value="3.0">Yoga (hatha) - 3.0 METs</option>
+                  <option value="7.0">Swimming (freestyle, moderate) - 7.0 METs</option>
+                  <option value="8.0">Basketball (game) - 8.0 METs</option>
+                  <option value="7.3">Tennis (singles) - 7.3 METs</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="duration-val">Duration (minutes) *</label>
+                <input type="number" id="duration-val" class="form-input" placeholder="e.g. 45" min="1" max="1440" required>
+              </div>
+              <button type="submit" class="btn btn-primary" id="calc-exercise-btn">🧮 Calculate</button>
+            </form>
+            
+            <div id="exercise-result" style="margin-top:var(--space-5); padding:var(--space-4); background:var(--bg-alt); border-radius:var(--radius-md); text-align:center; display:none;">
+              <h3 style="font-size:var(--fs-sm); color:var(--text-muted); margin-bottom:var(--space-2); text-transform:uppercase; letter-spacing:0.05em;">Estimated Calories Burned</h3>
+              <div style="font-size:var(--fs-4xl); font-weight:700; color:var(--primary); line-height:1;"><span id="calories-burned-val">0</span> <span style="font-size:var(--fs-lg); color:var(--text);">kcal</span></div>
+              <p style="font-size:var(--fs-sm); color:var(--text-muted); margin-top:var(--space-3); line-height:1.5;">Based on your current profile weight of <span id="current-user-weight" style="font-weight:600;">--</span> kg.</p>
+            </div>
+          </div>
+
+          <!-- Prescribed Exercise Plan Card -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h2 class="chart-title">📋 Your Prescribed Exercise Plan</h2>
+            </div>
+            
+            <div id="exercise-plan-loading" style="padding:var(--space-6); text-align:center; color:var(--text-muted);">
+              Loading your custom exercise plan...
+            </div>
+
+            <div id="exercise-plan-content" style="display:none; margin-top:var(--space-4); flex-direction:column; gap:var(--space-4);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-2);">
+                <div style="font-weight:600; color:var(--text-muted);">Goal: <span id="exercise-goal-type" style="color:var(--text); text-transform:capitalize;">--</span></div>
+              </div>
+
+              <!-- Workout 1 -->
+              <div style="background:var(--bg-alt); padding:var(--space-4); border-radius:var(--radius-md); border-left:4px solid var(--primary);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:var(--space-2);">
+                  <h3 style="font-size:var(--fs-lg); font-weight:600;" id="workout1-name">Workout 1</h3>
+                  <div style="font-weight:600; color:var(--primary);" id="workout1-cals">-- kcal</div>
+                </div>
+                <div style="color:var(--text-muted); font-size:var(--fs-sm); margin-bottom:var(--space-2);" id="workout1-duration">-- mins</div>
+                <p id="workout1-desc" style="color:var(--text); line-height:1.6; font-size:var(--fs-sm);"></p>
+              </div>
+
+              <!-- Workout 2 -->
+              <div style="background:var(--bg-alt); padding:var(--space-4); border-radius:var(--radius-md); border-left:4px solid var(--accent);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:var(--space-2);">
+                  <h3 style="font-size:var(--fs-lg); font-weight:600;" id="workout2-name">Workout 2</h3>
+                  <div style="font-weight:600; color:var(--accent);" id="workout2-cals">-- kcal</div>
+                </div>
+                <div style="color:var(--text-muted); font-size:var(--fs-sm); margin-bottom:var(--space-2);" id="workout2-duration">-- mins</div>
+                <p id="workout2-desc" style="color:var(--text); line-height:1.6; font-size:var(--fs-sm);"></p>
+              </div>
+
+              <!-- Workout 3 -->
+              <div style="background:var(--bg-alt); padding:var(--space-4); border-radius:var(--radius-md); border-left:4px solid var(--warning);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:var(--space-2);">
+                  <h3 style="font-size:var(--fs-lg); font-weight:600;" id="workout3-name">Workout 3</h3>
+                  <div style="font-weight:600; color:var(--warning);" id="workout3-cals">-- kcal</div>
+                </div>
+                <div style="color:var(--text-muted); font-size:var(--fs-sm); margin-bottom:var(--space-2);" id="workout3-duration">-- mins</div>
+                <p id="workout3-desc" style="color:var(--text); line-height:1.6; font-size:var(--fs-sm);"></p>
+              </div>
+
+              <p style="font-size:var(--fs-xs); color:var(--text-muted); text-align:center; margin-top:var(--space-4);">
+                *Calories burned are estimated dynamically based on your current body weight and standard MET formulas.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="bottom-nav" role="navigation" aria-label="Mobile navigation">
+    <div class="bottom-nav-items">
+      <a href="dashboard.html" class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">📊</span><span>Home</span></a>
+      <a href="meals.html"     class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">🍽️</span><span>Meals</span></a>
+      <a href="water.html"     class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">💧</span><span>Water</span></a>
+      <a href="weight.html"    class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">⚖️</span><span>Weight</span></a>
+      <a href="profile.html"   class="bottom-nav-item"><span class="bottom-nav-icon" aria-hidden="true">👤</span><span>Profile</span></a>
+    </div>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module">
+    import { initExercise } from './js/exercise.js';
+    if (window.innerWidth <= 1024) {
+      document.getElementById('mobile-menu-toggle').style.display = 'flex';
+    }
+    initExercise();
+  </script>
+</body>
+</html>

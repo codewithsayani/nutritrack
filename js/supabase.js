@@ -25,7 +25,7 @@ export const supabase = window.supabase.createClient(
 );
 
 /* ── Helper: get current user (throws if not logged in) ────── */
-export async function requireUser() {
+export async function requireAuth() {
   const { data: { session }, error } = await supabase.auth.getSession();
   if (error || !session) {
     window.location.href = '/login.html';

@@ -33,9 +33,11 @@ const BASE_FONT = {
   size:   12,
 };
 
-Chart.defaults.font          = BASE_FONT;
-Chart.defaults.color         = textColor();
-Chart.defaults.plugins.legend.display = false;
+if (typeof Chart !== 'undefined') {
+  Chart.defaults.font          = BASE_FONT;
+  Chart.defaults.color         = textColor();
+  Chart.defaults.plugins.legend.display = false;
+}
 
 /* ─────────────────────────────────────────
    Weekly Calories Bar Chart
@@ -309,6 +311,7 @@ export function renderMacrosPie(canvasId, { protein, carbs, fat }) {
    Update charts on theme change
    ───────────────────────────────────────── */
 export function updateChartsTheme() {
+  if (typeof Chart === 'undefined') return;
   Chart.defaults.color = textColor();
   [weeklyChartInstance, monthlyChartInstance, weightChartInstance, macroChartInstance]
     .filter(Boolean)
